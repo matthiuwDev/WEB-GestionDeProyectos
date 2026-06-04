@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary: oklch(51% 0.274 263);
+  --primary-light: oklch(65% 0.18 263);
+  
+  --gray-950: oklch(15% 0.01 300);
+  --gray-900: oklch(20% 0.01 300);
+  --gray-700: oklch(37% 0.014 302);
+  --gray-400: oklch(71% 0.015 304);
+  --gray-100: oklch(95% 0.005 300);
+  --gray-50: oklch(98% 0.002 300);
+
+  --surface: white;
+  --surface-alt: var(--gray-50);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--surface-alt);
+  color: var(--gray-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
