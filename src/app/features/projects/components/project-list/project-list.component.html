@@ -1,0 +1,25 @@
+<div class="projects-container">
+  <header>
+    <h2>Mis Proyectos</h2>
+    <button class="btn-create">+ Nuevo Proyecto</button>
+  </header>
+
+  @if (isLoading()) {
+    <p>Cargando tus proyectos...</p>
+  } @else {
+    <div class="projects-grid">
+      @for (project of projects(); track project.id) {
+        <article class="project-card">
+          <h3>{{ project.name }}</h3>
+          <p>{{ project.description }}</p>
+          <div class="card-footer">
+            <span>ID: #{{ project.id }}</span>
+            <button>Ver detalles</button>
+          </div>
+        </article>
+      } @empty {
+        <p>Aún no tienes proyectos creados. ¡Empieza creando uno!</p>
+      }
+    </div>
+  }
+</div>
