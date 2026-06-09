@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { ProjectResponse } from '../models/project.interface';
+import { Project, CreateProjectDto, CreateProjectResponse, ProjectResponse } from '../models/project.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,5 +13,9 @@ export class ProjectsService {
 
   getProjects(): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(this.apiUrl);
+  }
+
+  createProject(project: CreateProjectDto): Observable<CreateProjectResponse> {
+    return this.http.post<CreateProjectResponse>(this.apiUrl, project);
   }
 }

@@ -17,10 +17,30 @@ export interface Project {
   description: string;
   createdAt: string;
   updatedAt: string;
-  users: ProjectUser[];
+  users?: ProjectUser[];
 }
 
 export interface ProjectResponse {
   status: string;
   data: Project[];
+}
+
+export interface CreateProjectDto {
+  name: string;
+  description: string;
+  priority: number;
+}
+
+export interface ProjectCreated {
+  id: number;
+  name: string;
+  description: string;
+  priority: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProjectResponse {
+  status: string;
+  data: ProjectCreated;
 }

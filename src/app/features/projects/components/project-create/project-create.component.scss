@@ -1,0 +1,21 @@
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  min-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    min-width: 100%;
+  }
+}
