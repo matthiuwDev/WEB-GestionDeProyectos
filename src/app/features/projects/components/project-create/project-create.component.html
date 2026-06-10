@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Crear Nuevo Proyecto</h2>
+<h2 mat-dialog-title>{{ isEditMode() ? 'Editar Proyecto' : 'Crear Nuevo Proyecto' }}</h2>
 
 <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
@@ -39,9 +39,9 @@
     <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading()">Cancelar</button>
     <button mat-flat-button color="primary" type="submit" [disabled]="projectForm.invalid || isLoading()">
       @if (isLoading()) {
-        Creando...
+        {{ isEditMode() ? 'Guardando...' : 'Creando...' }}
       } @else {
-        Crear Proyecto
+        {{ isEditMode() ? 'Guardar Cambios' : 'Crear Proyecto' }}
       }
     </button>
   </mat-dialog-actions>

@@ -31,6 +31,8 @@ export interface CreateProjectDto {
   priority: number;
 }
 
+export interface UpdateProjectDto extends Partial<CreateProjectDto> {}
+
 export interface ProjectCreated {
   id: number;
   name: string;
@@ -44,3 +46,5 @@ export interface CreateProjectResponse {
   status: string;
   data: ProjectCreated;
 }
+
+export interface UpdateProjectResponse extends CreateProjectResponse {}

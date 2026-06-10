@@ -43,13 +43,29 @@ export class ProjectListComponent implements OnInit {
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(ProjectCreateComponent, {
       width: '500px',
-      disableClose: true
+      disableClose: true,
+      data: null
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Update signals reactively
         this.projects.update(currentProjects => [result, ...currentProjects]);
+      }
+    });
+  }
+
+  openEditDialog(project: Project): void {
+    const dialogRef = this.dialog.open(ProjectCreateComponent, {
+      width: '500px',
+      disableClose: true,
+      data: project
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.projects.update(currentProjects => 
+          currentProjects.map(p => p.id === result.id ? { ...p, ...result } : p)
+        );
       }
     });
   }
