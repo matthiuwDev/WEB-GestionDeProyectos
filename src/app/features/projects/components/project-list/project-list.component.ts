@@ -1,11 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectsService } from '../../services/projects.service';
 import { Project, ProjectResponse } from '../../models/project.interface';
 import { ProjectCreateComponent } from '../project-create/project-create.component';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-project-list',
@@ -13,7 +13,6 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
   imports: [
     MatButtonModule,
     MatDialogModule,
-    MatSnackBarModule
   ],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
@@ -21,7 +20,7 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
 export class ProjectListComponent implements OnInit {
   private projectsService = inject(ProjectsService);
   private dialog = inject(MatDialog);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   projects = signal<Project[]>([]);
   isLoading = signal<boolean>(false);
@@ -40,6 +39,7 @@ export class ProjectListComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar proyectos', err);
         this.isLoading.set(false);
+        this.notificationService.error('Error al cargar los proyectos');
       }
     });
   }
@@ -54,7 +54,7 @@ export class ProjectListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.projects.update(currentProjects => [result, ...currentProjects]);
-        this.snackBar.open('Proyecto creado con éxito', 'Cerrar', { duration: 3000 });
+        this.notificationService.success('Proyecto creado con éxito');
       }
     });
   }
@@ -71,7 +71,7 @@ export class ProjectListComponent implements OnInit {
         this.projects.update(currentProjects => 
           currentProjects.map(p => p.id === result.id ? { ...p, ...result } : p)
         );
-        this.snackBar.open('Proyecto actualizado con éxito', 'Cerrar', { duration: 3000 });
+        this.notificationService.success('Proyecto actualizado con éxito');
       }
     });
   }
@@ -92,11 +92,11 @@ export class ProjectListComponent implements OnInit {
         this.projectsService.deleteProject(project.id).subscribe({
           next: () => {
             this.projects.update(list => list.filter(p => p.id !== project.id));
-            this.snackBar.open('Proyecto eliminado correctamente', 'Cerrar', { duration: 3000 });
+            this.notificationService.success('Proyecto eliminado correctamente');
           },
           error: (err) => {
             const message = err.error?.message || 'Error al eliminar el proyecto';
-            this.snackBar.open(message, 'Cerrar', { duration: 5000, panelClass: ['error-snackbar'] });
+            this.notificationService.error(message);
           }
         });
       }
