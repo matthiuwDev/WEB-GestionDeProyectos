@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Project, CreateProjectDto, CreateProjectResponse, ProjectResponse } from '../models/project.interface';
+import { CreateProjectDto, CreateProjectResponse, ProjectResponse, UpdateProjectDto, UpdateProjectResponse } from '../models/project.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,5 +17,9 @@ export class ProjectsService {
 
   createProject(project: CreateProjectDto): Observable<CreateProjectResponse> {
     return this.http.post<CreateProjectResponse>(this.apiUrl, project);
+  }
+
+  updateProject(id: number, project: UpdateProjectDto): Observable<UpdateProjectResponse> {
+    return this.http.put<UpdateProjectResponse>(`${this.apiUrl}/${id}`, project);
   }
 }

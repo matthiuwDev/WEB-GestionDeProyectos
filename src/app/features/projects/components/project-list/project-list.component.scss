@@ -88,6 +88,11 @@
     color: var(--gray-400);
     font-family: monospace;
   }
+
+  .actions {
+    display: flex;
+    gap: 4px;
+  }
 }
 
 .loading-state, .empty-state {
