@@ -25,6 +25,11 @@ export interface ProjectResponse {
   data: Project[];
 }
 
+export interface SingleProjectResponse {
+  status: string;
+  data: Project;
+}
+
 export interface CreateProjectDto {
   name: string;
   description: string;

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { CreateProjectDto, CreateProjectResponse, ProjectResponse, UpdateProjectDto, UpdateProjectResponse } from '../models/project.interface';
+import { CreateProjectDto, CreateProjectResponse, ProjectResponse, SingleProjectResponse, UpdateProjectDto, UpdateProjectResponse } from '../models/project.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class ProjectsService {
 
   getProjects(): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(this.apiUrl);
+  }
+
+  getProjectById(id: number): Observable<SingleProjectResponse> {
+    return this.http.get<SingleProjectResponse>(`${this.apiUrl}/${id}`);
   }
 
   createProject(project: CreateProjectDto): Observable<CreateProjectResponse> {
