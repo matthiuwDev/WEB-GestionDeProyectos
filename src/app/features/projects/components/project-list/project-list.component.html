@@ -24,7 +24,7 @@
             <div class="actions">
               <button mat-button color="primary" (click)="openEditDialog(project)">Editar</button>
               <button mat-button color="warn" (click)="deleteProject(project)">Eliminar</button>
-              <button mat-button color="accent">Ver detalles</button>
+              <a mat-button color="accent" [routerLink]="['/projects', project.id]">Ver detalles</a>
             </div>
           </div>
         </article>

@@ -1,0 +1,68 @@
+<mat-sidenav-container class="shell-container">
+  <mat-sidenav #sidenav mode="side" opened class="shell-sidenav">
+    <div class="sidenav-header">
+      <mat-icon color="primary">rocket_launch</mat-icon>
+      <span>Gestión Ágil</span>
+    </div>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="backlog" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>list_alt</mat-icon>
+        <span matListItemTitle>Backlog</span>
+      </a>
+      <a mat-list-item routerLink="sprints" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>view_carousel</mat-icon>
+        <span matListItemTitle>Sprints</span>
+      </a>
+      <a mat-list-item routerLink="active-sprint" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>bolt</mat-icon>
+        <span matListItemTitle>Sprint Activo</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <button mat-button routerLink="/projects">
+        <mat-icon>arrow_back</mat-icon>
+        Mis Proyectos
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="shell-content">
+    <mat-toolbar color="primary" class="shell-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      @if (isLoading()) {
+        <span>Cargando proyecto...</span>
+      } @else if (error()) {
+        <span>Error</span>
+      } @else {
+        <span class="project-name">{{ project()?.name }}</span>
+        <span class="spacer"></span>
+        <span class="project-priority">
+          Prioridad: {{ project()?.priority }}
+        </span>
+      }
+    </mat-toolbar>
+
+    <main class="main-container">
+      @if (isLoading()) {
+        <div class="loading-overlay">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+      } @else if (error()) {
+        <div class="error-container">
+          <mat-icon color="warn">error</mat-icon>
+          <p>{{ error() }}</p>
+          <button mat-raised-button color="primary" (click)="reloadProject()">
+            Reintentar
+          </button>
+        </div>
+      } @else {
+        <router-outlet></router-outlet>
+      }
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

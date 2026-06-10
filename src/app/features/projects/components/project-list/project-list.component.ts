@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProjectsService } from '../../services/projects.service';
@@ -13,6 +14,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
   imports: [
     MatButtonModule,
     MatDialogModule,
+    RouterLink
   ],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
