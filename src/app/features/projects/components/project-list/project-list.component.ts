@@ -1,16 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectsService } from '../../services/projects.service';
 import { Project, ProjectResponse } from '../../models/project.interface';
 import { ProjectCreateComponent } from '../project-create/project-create.component';
+import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
   imports: [
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss',
@@ -18,6 +21,7 @@ import { ProjectCreateComponent } from '../project-create/project-create.compone
 export class ProjectListComponent implements OnInit {
   private projectsService = inject(ProjectsService);
   private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   projects = signal<Project[]>([]);
   isLoading = signal<boolean>(false);
@@ -50,6 +54,7 @@ export class ProjectListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.projects.update(currentProjects => [result, ...currentProjects]);
+        this.snackBar.open('Proyecto creado con éxito', 'Cerrar', { duration: 3000 });
       }
     });
   }
@@ -66,6 +71,34 @@ export class ProjectListComponent implements OnInit {
         this.projects.update(currentProjects => 
           currentProjects.map(p => p.id === result.id ? { ...p, ...result } : p)
         );
+        this.snackBar.open('Proyecto actualizado con éxito', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  deleteProject(project: Project): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Eliminar Proyecto',
+        message: `¿Estás seguro de que deseas eliminar "${project.name}"? Esta acción no se puede deshacer y eliminará todos los sprints y tareas asociados.`,
+        confirmText: 'Eliminar',
+        isDestructive: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.projectsService.deleteProject(project.id).subscribe({
+          next: () => {
+            this.projects.update(list => list.filter(p => p.id !== project.id));
+            this.snackBar.open('Proyecto eliminado correctamente', 'Cerrar', { duration: 3000 });
+          },
+          error: (err) => {
+            const message = err.error?.message || 'Error al eliminar el proyecto';
+            this.snackBar.open(message, 'Cerrar', { duration: 5000, panelClass: ['error-snackbar'] });
+          }
+        });
       }
     });
   }
