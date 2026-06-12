@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Nueva Historia de Usuario</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" placeholder="Ej: Implementar Login">
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          El nombre es obligatorio
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea 
+          matInput 
+          formControlName="description" 
+          placeholder="Detalles de la historia..."
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [disabled]="isLoading()" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button 
+      mat-flat-button 
+      color="primary" 
+      type="submit" 
+      [disabled]="form.invalid || isLoading()"
+    >
+      <mat-spinner *ngIf="isLoading()" diameter="20" class="spinner"></mat-spinner>
+      <span *ngIf="!isLoading()">Guardar</span>
+    </button>
+  </mat-dialog-actions>
+</form>
