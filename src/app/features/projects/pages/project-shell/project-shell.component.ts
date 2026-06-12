@@ -4,8 +4,6 @@ import {
   effect,
   inject,
   input,
-  numberAttribute,
-  signal
 } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
@@ -16,8 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { ProjectsService } from '../../services/projects.service';
-import { Project } from '../../models/project.interface';
+import { ProjectContextService } from '../../../../core/services/project-context.service';
 
 @Component({
   selector: 'app-project-shell',
@@ -38,46 +35,23 @@ import { Project } from '../../models/project.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ProjectShellComponent {
-  private readonly projectsService = inject(ProjectsService);
+  private readonly projectContext = inject(ProjectContextService);
 
   projectId = input.required<string>();
 
-  readonly project = signal<Project | null>(null);
-  readonly isLoading = signal(true);
-  readonly error = signal<string | null>(null);
+  // Usa contexto centralizado para estado compartido
+  readonly project = this.projectContext.project;
+  readonly isLoading = this.projectContext.isLoading;
+  readonly error = this.projectContext.error;
 
   constructor() {
     effect(() => {
-      const id = Number(this.projectId());
-
-      if (id) {
-        this.fetchProject(id);
-      }
+      // Establece el ID del proyecto en el contexto, lo que dispara la carga de datos
+      this.projectContext.setProjectId(this.projectId());
     });
   }
 
   reloadProject(): void {
-    this.fetchProject(Number(this.projectId()));
-  }
-
-  private fetchProject(id: number): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.projectsService.getProjectById(id).subscribe({
-      next: (response) => {
-        this.project.set(response.data);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Error loading project', err);
-
-        this.error.set(
-          'No se pudo cargar la información del proyecto.'
-        );
-
-        this.isLoading.set(false);
-      }
-    });
+    this.projectContext.refreshProject();
   }
 }

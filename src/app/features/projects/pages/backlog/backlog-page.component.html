@@ -1,0 +1,56 @@
+<div class="page-header">
+  <div class="title-container">
+    <h1>Backlog</h1>
+    <p class="subtitle" *ngIf="userStories().length > 0">
+      {{ userStories().length }} Historias de Usuario
+    </p>
+  </div>
+  <button mat-flat-button color="primary" (click)="openCreateDialog()">
+    <mat-icon>add</mat-icon>
+    Nueva Historia
+  </button>
+</div>
+
+<div class="content-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando historias...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="retryLoad()">Reintentar</button>
+    </div>
+  } @else if (userStories().length === 0) {
+    <div class="empty-state">
+      <mat-icon>assignment</mat-icon>
+      <h3>El backlog está vacío</h3>
+      <p>Comienza creando la primera historia de usuario para este proyecto.</p>
+      <button mat-stroked-button color="primary" (click)="openCreateDialog()">
+        Crear Historia
+      </button>
+    </div>
+  } @else {
+    <div class="stories-list">
+      @for (story of userStories(); track story.id) {
+        <mat-card class="story-card">
+          <mat-card-header>
+            <mat-card-title>{{ story.name }}</mat-card-title>
+            <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="story-description" [class.empty]="!story.description">
+              {{ story.description || 'Sin descripción' }}
+            </p>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-actions align="end">
+            <button mat-button>Ver detalles</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
