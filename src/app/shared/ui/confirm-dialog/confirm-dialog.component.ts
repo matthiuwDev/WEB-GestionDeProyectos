@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -34,7 +34,8 @@ export interface ConfirmDialogData {
       min-width: 300px;
       padding-top: 8px;
     }
-  `]
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmDialogComponent {
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
@@ -48,3 +49,4 @@ export class ConfirmDialogComponent {
     this.dialogRef.close(true);
   }
 }
+
