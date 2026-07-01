@@ -47,6 +47,10 @@
           </mat-card-content>
           <mat-divider></mat-divider>
           <mat-card-actions align="end">
+            <button mat-icon-button color="warn" (click)="deleteUserStory(story)" aria-label="Eliminar historia">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-button color="primary" (click)="openEditDialog(story)">Editar</button>
             <button mat-button>Ver detalles</button>
           </mat-card-actions>
         </mat-card>
