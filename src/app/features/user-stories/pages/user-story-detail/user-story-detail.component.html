@@ -1,0 +1,128 @@
+<div class="page-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando detalles...</p>
+    </div>
+  } @else if (story(); as currentStory) {
+    <div class="header-actions">
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Backlog
+      </button>
+    </div>
+
+    <div class="content-layout">
+      <!-- Story Details Section -->
+      <section class="story-section">
+        <mat-card class="story-card">
+          <mat-card-header class="story-header">
+            @if (!isEditing()) {
+              <div class="title-container">
+                <mat-card-title class="story-title" (click)="enableEdit()">
+                  {{ currentStory.name }}
+                </mat-card-title>
+                <mat-card-subtitle>Historia de Usuario #{{ currentStory.id }}</mat-card-subtitle>
+              </div>
+              <button mat-icon-button (click)="enableEdit()" aria-label="Editar" color="primary">
+                <mat-icon>edit</mat-icon>
+              </button>
+            } @else {
+              <mat-form-field appearance="outline" class="full-width title-input">
+                <mat-label>Título de la Historia</mat-label>
+                <input matInput [ngModel]="editName()" (ngModelChange)="editName.set($event)" autofocus>
+              </mat-form-field>
+            }
+          </mat-card-header>
+
+          <mat-card-content class="story-content">
+            @if (!isEditing()) {
+              <div class="description-view" (click)="enableEdit()">
+                <p [class.empty]="!currentStory.description">
+                  {{ currentStory.description || 'Añadir una descripción detallada...' }}
+                </p>
+              </div>
+            } @else {
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descripción</mat-label>
+                <textarea 
+                  matInput 
+                  [ngModel]="editDescription()" 
+                  (ngModelChange)="editDescription.set($event)" 
+                  rows="5" 
+                  placeholder="Detalles, criterios de aceptación..."></textarea>
+              </mat-form-field>
+              
+              <div class="edit-actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-flat-button color="primary" (click)="saveStory()" [disabled]="!editName().trim()">
+                  Guardar Cambios
+                </button>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </section>
+
+      <!-- Tasks Section -->
+      <section class="tasks-section">
+        <h3>Tareas de la Historia</h3>
+        
+        <div class="tasks-list">
+          @for (task of tasks(); track task.id) {
+            <mat-card class="task-card" [class.done]="task.status === 'DONE'">
+              <mat-card-content class="task-content">
+                <div class="task-main">
+                  <mat-checkbox 
+                    [checked]="task.status === 'DONE'"
+                    (change)="updateTaskStatus(task, $event.checked ? 'DONE' : 'TODO')"
+                    color="primary">
+                    <span class="task-name" [class.completed-text]="task.status === 'DONE'">
+                      {{ task.name }}
+                    </span>
+                  </mat-checkbox>
+                </div>
+                
+                <div class="task-actions">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="status-select">
+                    <mat-select [value]="task.status" (selectionChange)="updateTaskStatus(task, $event.value)">
+                      <mat-option value="TODO">Por hacer</mat-option>
+                      <mat-option value="IN_PROGRESS">En progreso</mat-option>
+                      <mat-option value="DONE">Completado</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" (click)="deleteTask(task)" aria-label="Eliminar tarea">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          } @empty {
+            <p class="empty-tasks">No hay tareas creadas para esta historia.</p>
+          }
+        </div>
+
+        <!-- Quick Add Task -->
+        <mat-card class="quick-add-card">
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="full-width quick-add-field" subscriptSizing="dynamic">
+              <mat-icon matPrefix color="primary">add</mat-icon>
+              <input 
+                matInput 
+                placeholder="Añadir nueva tarea y presionar Enter..." 
+                [ngModel]="newTaskName()"
+                (ngModelChange)="newTaskName.set($event)"
+                (keyup.enter)="addTask()"
+                [disabled]="isAddingTask()"
+              >
+              @if (isAddingTask()) {
+                <mat-spinner matSuffix diameter="20"></mat-spinner>
+              }
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+      </section>
+    </div>
+  }
+</div>

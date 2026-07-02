@@ -35,6 +35,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/projects/pages/active-sprint/active-sprint-page.component')
       },
       {
+        path: 'user-stories/:storyId',
+        loadComponent: () => import('./features/user-stories/pages/user-story-detail/user-story-detail.component')
+      },
+      {
         path: '',
         redirectTo: 'backlog',
         pathMatch: 'full'

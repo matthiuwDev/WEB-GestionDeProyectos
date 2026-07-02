@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal, effect, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -20,6 +21,7 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
@@ -103,7 +105,7 @@ export default class BacklogPageComponent {
       data: userStory,
     });
 
-    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.userStories.update((currentUserStories) =>
           currentUserStories.map((s) => (s.id === result.id ? { ...s, ...result } : s)),
