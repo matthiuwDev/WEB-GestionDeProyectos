@@ -1,59 +1,67 @@
-# WEBGestionDeProyectos
+# WEB-GestionDeProyectos (Frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+Aplicación web para la gestión de proyectos bajo metodologías ágiles (Scrum). Desarrollada con las últimas características del ecosistema de Angular, enfocada en un alto rendimiento y una arquitectura escalable basada en dominios.
 
-## Development server
+> ⚠️ **Nota Importante:** Este proyecto se encuentra en desarrollo activo y su estructura, arquitectura o funcionalidades están sujetas a modificaciones sin previo aviso.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 🚀 Tecnologías y Prácticas Clave
+
+- **Framework:** Angular 20
+- **UI / Componentes:** Angular Material & Angular CDK (Drag & Drop)
+- **Reactividad y Estado:** Signals (`signal`, `computed`, `effect`)
+- **Rendimiento:** Zoneless (sin dependencia de Zone.js) y `ChangeDetectionStrategy.OnPush`
+- **Arquitectura:** Feature-Based Architecture (Domain-Driven Design)
+
+## 📁 Estructura del Proyecto (Domain-Driven)
+
+El proyecto está organizado estrictamente por dominios de negocio, separando las responsabilidades de forma clara:
+
+```
+src/app/
+├── core/             # Elementos globales (Guards, Interceptors, Context Services)
+├── shared/           # UI reutilizable, pipes y utilidades sin lógica de negocio
+└── features/         # Dominios principales de la aplicación
+    ├── auth/         # Autenticación y acceso
+    ├── projects/     # Gestión de Proyectos y Layout principal (Shell)
+    ├── sprints/      # Gestión de Sprints, Planificación y Tablero Kanban Activo
+    ├── user-stories/ # Backlog e Historias de Usuario
+    └── tasks/        # Gestión de tareas individuales
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Cada *feature* agrupa sus propias páginas (`pages/`), componentes de interfaz (`components/`), servicios (`services/`) y modelos (`models/`).
 
-## Code scaffolding
+## 🛠️ Características Principales
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. **Autenticación:** Acceso seguro al sistema.
+2. **Gestión de Proyectos:** CRUD de proyectos y navegación contextualizada.
+3. **Backlog de Producto:** Gestión de Historias de Usuario sin asignar.
+4. **Sprint Planning:** Asignación visual (Drag & Drop) de Historias de Usuario desde el Backlog hacia el Sprint en curso.
+5. **Active Sprint (Kanban):** Tablero interactivo con *swimlanes* (carriles) por historia de usuario para mover tareas (TODO, IN PROGRESS, DONE) en tiempo real.
 
-```bash
-ng generate component component-name
-```
+## ⚙️ Configuración y Ejecución Local
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Prerrequisitos
+- Node.js (versión compatible con Angular 20)
+- npm o yarn
+- CLI de Angular (`npm install -g @angular/cli`)
 
-```bash
-ng generate --help
-```
+### Pasos
+1. Clona el repositorio.
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```bash
+   ng serve
+   ```
+4. Navega a `http://localhost:4200/`. La aplicación se recargará automáticamente al guardar cambios en los archivos fuente.
 
-## Building
+## 📝 Convenciones de Código y Arquitectura
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Componentes Standalone:** No se utilizan `NgModules`. Todo nuevo componente debe ser `standalone: true`.
+- **Control Flow:** Se utiliza el nuevo Control Flow de Angular (`@if`, `@for`, `@defer`) en lugar de directivas estructurales antiguas (`*ngIf`, `*ngFor`).
+- **Manejo del DOM:** Las interacciones complejas como arrastrar y soltar se gestionan exclusivamente con `@angular/cdk/drag-drop`.
+- **Inyección de Dependencias:** Se prefiere el uso de la función `inject()` sobre la inyección por constructor.

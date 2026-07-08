@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -49,6 +49,11 @@ export default class UserStoryDetailComponent implements OnInit {
   readonly tasks = signal<Task[]>([]);
   readonly isLoading = signal(true);
   readonly isEditing = signal(false);
+  
+  readonly isEditable = computed(() => {
+    const current = this.story();
+    return current ? current.sprintId === null : false;
+  });
   
   // Model for inline editing
   readonly editName = signal('');

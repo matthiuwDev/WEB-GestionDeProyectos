@@ -1,0 +1,79 @@
+<div class="page-header">
+  <div class="title-container">
+    <h1>Gestión de Sprints</h1>
+    @if (sprints().length > 0) {
+      <p class="subtitle">
+        {{ sprints().length }} Sprints en total
+      </p>
+    }
+  </div>
+  <button mat-flat-button color="primary" (click)="openCreateDialog()">
+    <mat-icon>add</mat-icon>
+    Nuevo Sprint
+  </button>
+</div>
+
+<div class="content-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando sprints...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="retryLoad()">Reintentar</button>
+    </div>
+  } @else if (sprints().length === 0) {
+    <div class="empty-state">
+      <mat-icon>view_timeline</mat-icon>
+      <h3>No hay sprints planificados</h3>
+      <p>Comienza creando el primer sprint para organizar el trabajo.</p>
+      <button mat-stroked-button color="primary" (click)="openCreateDialog()">
+        Crear Sprint
+      </button>
+    </div>
+  } @else {
+    <div class="sprints-list">
+      @for (sprint of sprints(); track sprint.id) {
+        <mat-card class="sprint-card" [ngClass]="'status-' + sprint.status.toLowerCase()">
+          <mat-card-header>
+            <mat-card-title>
+              {{ sprint.name }}
+            </mat-card-title>
+            <mat-card-subtitle>
+              <mat-icon class="date-icon">event</mat-icon>
+              {{ sprint.startDate | date:'mediumDate' }} - {{ sprint.endDate | date:'mediumDate' }}
+            </mat-card-subtitle>
+            
+            <div class="status-badge" [ngClass]="'badge-' + sprint.status.toLowerCase()">
+              {{ sprint.status }}
+            </div>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <p class="sprint-goal">
+              <strong>Objetivo:</strong> {{ sprint.goal || 'Sin objetivo definido' }}
+            </p>
+          </mat-card-content>
+          
+          <mat-divider></mat-divider>
+          
+          <mat-card-actions align="end">
+            <button 
+              mat-icon-button 
+              color="warn" 
+              (click)="deleteSprint(sprint)" 
+              [disabled]="sprint.status === 'ACTIVE'" 
+              [attr.aria-label]="'Eliminar ' + sprint.name"
+              [matTooltip]="sprint.status === 'ACTIVE' ? 'No se puede eliminar un sprint activo' : 'Eliminar sprint'">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-button color="primary" [routerLink]="[sprint.id]">Ver detalles</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

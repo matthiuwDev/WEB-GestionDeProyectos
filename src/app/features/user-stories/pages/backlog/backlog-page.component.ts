@@ -9,9 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { UserStoriesService } from '../../../user-stories/services/user-stories.service';
-import { UserStory } from '../../../user-stories/models/user-story.interface';
-import { UserStoryCreateDialogComponent } from '../../../user-stories/components/user-story-create-dialog/user-story-create-dialog.component';
+import { UserStoriesService } from '../../services/user-stories.service';
+import { UserStory } from '../../models/user-story.interface';
+import { UserStoryCreateDialogComponent } from '../../components/user-story-create-dialog/user-story-create-dialog.component';
 import { ProjectContextService } from '../../../../core/services/project-context.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
@@ -61,7 +61,7 @@ export default class BacklogPageComponent {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.userStoriesService.getUserStories(projectId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.userStoriesService.getUserStories({ projectId }).subscribe({
       next: (response) => {
         // Filtrar solo las que no tienen sprintId (backlog)
         const backlogStories = response.data.filter((s) => s.sprintId === null);

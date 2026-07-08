@@ -6,9 +6,11 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Nombre</mat-label>
         <input matInput formControlName="name" placeholder="Ej: Implementar Login">
-        <mat-error *ngIf="form.get('name')?.hasError('required')">
-          El nombre es obligatorio
-        </mat-error>
+        @if (form.get('name')?.hasError('required')) {
+          <mat-error>
+            El nombre es obligatorio
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -33,8 +35,11 @@
       type="submit" 
       [disabled]="form.invalid || isLoading()"
     >
-      <mat-spinner *ngIf="isLoading()" diameter="20" class="spinner"></mat-spinner>
-      <span *ngIf="!isLoading()">Guardar</span>
+      @if (isLoading()) {
+        <mat-spinner diameter="20" class="spinner"></mat-spinner>
+      } @else {
+        <span>Guardar</span>
+      }
     </button>
   </mat-dialog-actions>
 </form>
