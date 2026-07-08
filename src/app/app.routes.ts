@@ -15,7 +15,7 @@ export const routes: Routes = [
   {
     path: 'projects',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/projects/components/project-list/project-list.component').then(m => m.ProjectListComponent)
+    loadComponent: () => import('./features/projects/pages/project-list/project-list.component').then(m => m.ProjectListComponent)
   },
   {
     path: 'projects/:projectId',
@@ -24,15 +24,23 @@ export const routes: Routes = [
     children: [
       {
         path: 'backlog',
-        loadComponent: () => import('./features/projects/pages/backlog/backlog-page.component')
+        loadComponent: () => import('./features/user-stories/pages/backlog/backlog-page.component')
       },
       {
         path: 'sprints',
-        loadComponent: () => import('./features/projects/pages/sprint-list/sprint-list-page.component')
+        loadComponent: () => import('./features/sprints/pages/sprint-list/sprint-list-page.component')
+      },
+      {
+        path: 'sprints/:sprintId',
+        loadComponent: () => import('./features/sprints/pages/sprint-planning/sprint-planning-page.component')
       },
       {
         path: 'active-sprint',
-        loadComponent: () => import('./features/projects/pages/active-sprint/active-sprint-page.component')
+        loadComponent: () => import('./features/sprints/pages/active-sprint/active-sprint-page.component')
+      },
+      {
+        path: 'user-stories/:storyId',
+        loadComponent: () => import('./features/user-stories/pages/user-story-detail/user-story-detail.component')
       },
       {
         path: '',

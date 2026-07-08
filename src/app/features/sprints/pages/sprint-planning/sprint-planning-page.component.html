@@ -1,0 +1,93 @@
+<div class="page-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando panel de planificación...</p>
+    </div>
+  } @else {
+    <div class="header-actions">
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a Sprints
+      </button>
+      
+      @if (sprint(); as currentSprint) {
+        <div class="sprint-info">
+          <h2>Planning: {{ currentSprint.name }}</h2>
+          <span class="status-badge" [ngClass]="'badge-' + currentSprint.status.toLowerCase()">
+            {{ currentSprint.status }}
+          </span>
+        </div>
+      }
+    </div>
+
+    <div class="planning-board">
+      
+      <!-- BACKLOG COLUMN -->
+      <div class="board-column">
+        <div class="column-header">
+          <h3>Backlog</h3>
+          <span class="count">{{ backlogStories().length }}</span>
+        </div>
+        
+        <div 
+          class="drop-list"
+          cdkDropList
+          #backlogList="cdkDropList"
+          [cdkDropListData]="backlogStories()"
+          [cdkDropListConnectedTo]="[sprintList]"
+          (cdkDropListDropped)="drop($event, 'BACKLOG')">
+          
+          @for (story of backlogStories(); track story.id) {
+            <mat-card class="story-card drag-box" cdkDrag [routerLink]="['../../user-stories', story.id]">
+              <mat-card-header>
+                <mat-card-title>{{ story.name }}</mat-card-title>
+                <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          } @empty {
+            <div class="empty-list-placeholder">
+              No hay historias en el backlog
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- SPRINT COLUMN -->
+      <div class="board-column sprint-column">
+        <div class="column-header">
+          <h3>Sprint Actual</h3>
+          <span class="count">{{ sprintStories().length }}</span>
+        </div>
+        
+        <div 
+          class="drop-list sprint-drop-list"
+          cdkDropList
+          #sprintList="cdkDropList"
+          [cdkDropListData]="sprintStories()"
+          [cdkDropListConnectedTo]="[backlogList]"
+          (cdkDropListDropped)="drop($event, 'SPRINT')">
+          
+          @for (story of sprintStories(); track story.id) {
+            <mat-card class="story-card drag-box" cdkDrag [routerLink]="['../../user-stories', story.id]">
+              <mat-card-header>
+                <mat-card-title>{{ story.name }}</mat-card-title>
+                <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
+              </mat-card-header>
+              @if (story.description) {
+                <mat-card-content>
+                  <p class="story-desc">{{ story.description }}</p>
+                </mat-card-content>
+              }
+            </mat-card>
+          } @empty {
+            <div class="empty-list-placeholder highlight">
+              Arrastra historias aquí para planificar el sprint
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

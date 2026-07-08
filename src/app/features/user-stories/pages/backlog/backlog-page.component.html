@@ -1,9 +1,11 @@
 <div class="page-header">
   <div class="title-container">
     <h1>Backlog</h1>
-    <p class="subtitle" *ngIf="userStories().length > 0">
-      {{ userStories().length }} Historias de Usuario
-    </p>
+    @if (userStories().length > 0) {
+      <p class="subtitle">
+        {{ userStories().length }} Historias de Usuario
+      </p>
+    }
   </div>
   <button mat-flat-button color="primary" (click)="openCreateDialog()">
     <mat-icon>add</mat-icon>
@@ -47,7 +49,11 @@
           </mat-card-content>
           <mat-divider></mat-divider>
           <mat-card-actions align="end">
-            <button mat-button>Ver detalles</button>
+            <button mat-icon-button color="warn" (click)="deleteUserStory(story)" aria-label="Eliminar historia">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-button color="primary" (click)="openEditDialog(story)">Editar</button>
+            <button mat-button [routerLink]="['../user-stories', story.id]">Ver detalles</button>
           </mat-card-actions>
         </mat-card>
       }

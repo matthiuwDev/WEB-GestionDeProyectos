@@ -1,0 +1,97 @@
+<div class="page-container">
+  <div class="header">
+    <h1>Sprint Activo</h1>
+    @if (activeSprint(); as sprint) {
+      <div class="sprint-info">
+        <h2>{{ sprint.name }}</h2>
+        <span class="dates">{{ sprint.startDate | date:'mediumDate' }} - {{ sprint.endDate | date:'mediumDate' }}</span>
+        <p class="goal"><strong>Objetivo:</strong> {{ sprint.goal }}</p>
+      </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando tablero...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (!activeSprint()) {
+    <div class="empty-state">
+      <mat-icon>explore</mat-icon>
+      <h3>No hay Sprint Activo</h3>
+      <p>Debes iniciar un sprint desde la vista de planificación para ver el tablero.</p>
+    </div>
+  } @else {
+    
+    <div class="board-header">
+      <div class="story-title-col">Historia de Usuario</div>
+      <div class="columns-header">
+        <div class="col-title">Por Hacer</div>
+        <div class="col-title">En Progreso</div>
+        <div class="col-title">Terminado</div>
+      </div>
+    </div>
+
+    <div class="board-content">
+      @for (story of userStories(); track story.id; let i = $index) {
+        <div class="swimlane">
+          <!-- Story Info -->
+          <div class="story-info">
+            <h4>{{ story.name }}</h4>
+            @if (story.description) {
+              <p>{{ story.description }}</p>
+            }
+          </div>
+
+          <!-- Tasks Columns (Restricted to this row) -->
+          <div class="swimlane-columns" cdkDropListGroup>
+            
+            <!-- TODO Column -->
+            <div class="column" 
+                 cdkDropList 
+                 (cdkDropListDropped)="drop($event, i, 'TODO')">
+              @for (task of getTasksByStatus(story, 'TODO'); track task.id) {
+                <mat-card class="task-card grab-card" cdkDrag [cdkDragData]="task">
+                  <mat-card-content>{{ task.name }}</mat-card-content>
+                </mat-card>
+              }
+            </div>
+            
+            <!-- IN PROGRESS Column -->
+            <div class="column" 
+                 cdkDropList 
+                 (cdkDropListDropped)="drop($event, i, 'IN_PROGRESS')">
+              @for (task of getTasksByStatus(story, 'IN_PROGRESS'); track task.id) {
+                <mat-card class="task-card grab-card" cdkDrag [cdkDragData]="task">
+                  <mat-card-content>{{ task.name }}</mat-card-content>
+                </mat-card>
+              }
+            </div>
+
+            <!-- DONE Column -->
+            <div class="column done-column" 
+                 cdkDropList 
+                 (cdkDropListDropped)="drop($event, i, 'DONE')">
+              @for (task of getTasksByStatus(story, 'DONE'); track task.id) {
+                <mat-card class="task-card grab-card done-task" cdkDrag [cdkDragData]="task">
+                  <mat-card-content>{{ task.name }}</mat-card-content>
+                </mat-card>
+              }
+            </div>
+            
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <mat-icon>assignment</mat-icon>
+          <p>Este sprint no tiene historias de usuario asignadas.</p>
+        </div>
+      }
+    </div>
+  }
+</div>

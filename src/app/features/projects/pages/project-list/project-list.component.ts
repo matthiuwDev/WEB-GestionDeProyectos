@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProjectsService } from '../../services/projects.service';
 import { Project, ProjectResponse } from '../../models/project.interface';
-import { ProjectCreateComponent } from '../project-create/project-create.component';
+import { ProjectCreateComponent } from '../../components/project-create/project-create.component';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { NotificationService } from '../../../../shared/services/notification.service';
 

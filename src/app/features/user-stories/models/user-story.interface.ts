@@ -1,3 +1,5 @@
+import { Task } from '../../../features/tasks/models/task.interface';
+
 export interface UserStory {
   id: number;
   name: string;
@@ -7,6 +9,7 @@ export interface UserStory {
   position: number | null;
   createdAt: string;
   updatedAt: string;
+  tasks?: Task[];
 }
 
 export interface CreateUserStoryDto {

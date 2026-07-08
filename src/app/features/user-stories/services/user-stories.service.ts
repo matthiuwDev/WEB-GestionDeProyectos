@@ -15,8 +15,16 @@ export class UserStoriesService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/user-stories`;
 
-  getUserStories(projectId?: number): Observable<UserStoryListResponse> {
-    const url = projectId ? `${this.apiUrl}?projectId=${projectId}` : this.apiUrl;
+  getUserStories(params?: { projectId?: number, sprintId?: number, includeTasks?: boolean }): Observable<UserStoryListResponse> {
+    let url = this.apiUrl;
+    const query = [];
+    if (params?.projectId) query.push(`projectId=${params.projectId}`);
+    if (params?.sprintId) query.push(`sprintId=${params.sprintId}`);
+    if (params?.includeTasks) query.push(`includeTasks=true`);
+    
+    if (query.length > 0) {
+      url += '?' + query.join('&');
+    }
     return this.http.get<UserStoryListResponse>(url);
   }
 
