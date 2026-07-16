@@ -1,7 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { CreateProjectDto, CreateProjectResponse, ProjectResponse, SingleProjectResponse, UpdateProjectDto, UpdateProjectResponse } from '../models/project.interface';
+import {
+  CreateProjectDto,
+  CreateProjectResponse,
+  ProjectResponse,
+  SingleProjectResponse,
+  UpdateProjectDto,
+  UpdateProjectResponse,
+} from '../models/project.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({

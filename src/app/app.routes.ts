@@ -43,6 +43,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/user-stories/pages/user-story-detail/user-story-detail.component')
       },
       {
+        path: 'users',
+        loadComponent: () => import('./features/users/pages/project-users-page/project-users-page.component')
+      },
+      {
         path: '',
         redirectTo: 'backlog',
         pathMatch: 'full'
