@@ -5,8 +5,7 @@
       <p class="subtitle">{{ users().length }} miembros activos e invitados</p>
     }
   </div>
-  <button mat-flat-button color="primary" (click)="openInviteDialog()">
-    <mat-icon>person_add</mat-icon>
+  <button mat-flat-button color="primary" (click)="openInviteDialog()" class="minimal-primary-btn">
     Invitar Usuario
   </button>
 </div>
@@ -28,7 +27,7 @@
       <mat-icon>groups</mat-icon>
       <h3>No hay usuarios en este proyecto</h3>
       <p>Comienza invitando a tu equipo para colaborar.</p>
-      <button mat-stroked-button color="primary" (click)="openInviteDialog()">
+      <button mat-stroked-button (click)="openInviteDialog()" class="minimal-btn">
         Invitar Usuario
       </button>
     </div>

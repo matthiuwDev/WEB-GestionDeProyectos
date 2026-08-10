@@ -1,41 +1,69 @@
-<div class="projects-container">
-  <header>
-    <h2>Mis Proyectos</h2>
-    <button mat-flat-button color="primary" (click)="openCreateDialog()">
-      + Nuevo Proyecto
-    </button>
-  </header>
+<div class="dashboard-wrapper">
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="app-title">Gestión</span>
+    </div>
 
-  @if (isLoading()) {
-    <div class="loading-state">
-      <p>Cargando tus proyectos...</p>
+    <div class="nav-actions">
+      <div class="user-profile">
+        <span class="user-name">{{ currentUser()?.name || 'Usuario' }}</span>
+      </div>
+      <button mat-button class="minimal-logout-btn" (click)="logout()">
+        Salir
+      </button>
     </div>
-  } @else {
-    <div class="projects-grid">
-      @for (project of projects(); track project.id) {
-        <article class="project-card">
-          <div class="priority-badge" [attr.data-priority]="project.priority">
-            P{{ project.priority }}
-          </div>
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.description }}</p>
-          <div class="card-footer">
-            <span>ID: #{{ project.id }}</span>
-            <div class="actions">
-              <button mat-button color="primary" (click)="openEditDialog(project)">Editar</button>
-              <button mat-button color="warn" (click)="deleteProject(project)">Eliminar</button>
-              <a mat-button color="accent" [routerLink]="['/projects', project.id]">Ver detalles</a>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="projects-container">
+    <header class="section-header">
+      <div class="header-titles">
+        <h1>Proyectos</h1>
+      </div>
+      <button mat-flat-button class="create-project-btn" (click)="openCreateDialog()">
+        Nuevo Proyecto
+      </button>
+    </header>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <p>Cargando proyectos...</p>
+      </div>
+    } @else {
+      <div class="projects-grid">
+        @for (project of projects(); track project.id) {
+          @let priorityInfo = getPriorityLabel(project.priority);
+          <article class="project-card" [routerLink]="['/projects', project.id]">
+            <div class="card-header">
+              <span class="project-id">#{{ project.id }}</span>
+              <span class="priority-badge" [ngClass]="priorityInfo.colorClass">
+                {{ priorityInfo.text }}
+              </span>
             </div>
+            
+            <div class="card-body">
+              <h3>{{ project.name }}</h3>
+              <p>{{ project.description || 'Sin descripción.' }}</p>
+            </div>
+
+            <div class="card-footer">
+              <div class="secondary-actions">
+                <button mat-button class="action-btn" (click)="openEditDialog(project); $event.stopPropagation()">Editar</button>
+                <button mat-button class="action-btn delete-btn" (click)="deleteProject(project); $event.stopPropagation()">Eliminar</button>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <div class="empty-state">
+            <h3>Sin proyectos</h3>
+            <p>Comienza creando tu primer proyecto.</p>
+            <button mat-stroked-button class="empty-create-btn" (click)="openCreateDialog()">
+              Crear proyecto
+            </button>
           </div>
-        </article>
-      } @empty {
-        <div class="empty-state">
-          <p>Aún no tienes proyectos creados. ¡Empieza creando uno!</p>
-          <button mat-stroked-button color="primary" (click)="openCreateDialog()">
-            Crear primer proyecto
-          </button>
-        </div>
-      }
-    </div>
-  }
+        }
+      </div>
+    }
+  </main>
 </div>

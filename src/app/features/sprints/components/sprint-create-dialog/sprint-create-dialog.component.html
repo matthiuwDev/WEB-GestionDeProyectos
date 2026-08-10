@@ -1,69 +1,70 @@
-<h2 mat-dialog-title>Planificar Nuevo Sprint</h2>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
-    <div class="form-container">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nombre del Sprint</mat-label>
-        <input matInput formControlName="name" placeholder="Ej: Sprint 1 - MVP">
-        @if (form.get('name')?.hasError('required')) {
-          <mat-error>El nombre es obligatorio</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Rango de Fechas</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate formControlName="startDate" placeholder="Inicio">
-          <input matEndDate formControlName="endDate" placeholder="Fin">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-        
-        @if (form.get('startDate')?.hasError('required') || form.get('endDate')?.hasError('required')) {
-          <mat-error>
-            Ambas fechas son obligatorias
-          </mat-error>
-        }
-        @if (form.hasError('dateRangeInvalid')) {
-          <mat-error>
-            La fecha de fin no puede ser menor a la de inicio
-          </mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Objetivo (Goal)</mat-label>
-        <textarea 
-          matInput 
-          formControlName="goal" 
-          placeholder="¿Qué esperamos lograr en este sprint?"
-          rows="3"
-        ></textarea>
-        @if (form.get('goal')?.hasError('required')) {
-          <mat-error>El objetivo es obligatorio</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Estado inicial</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="PENDING">Pendiente</mat-option>
-          <mat-option value="ACTIVE">Activo</mat-option>
-          <mat-option value="COMPLETED">Completado</mat-option>
-        </mat-select>
-      </mat-form-field>
+<div class="modal-wrapper">
+  <div class="modal-header">
+    <div class="header-titles">
+      <h2>Planificar Sprint</h2>
     </div>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" [disabled]="isLoading()" (click)="onCancel()">Cancelar</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isLoading()">
-      @if (isLoading()) {
-        <mat-spinner diameter="20" class="spinner"></mat-spinner>
-      } @else {
-        <span>Crear Sprint</span>
-      }
+    <button mat-icon-button (click)="onCancel()" class="close-btn" type="button">
+      <mat-icon>close</mat-icon>
     </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="modal-content">
+      <div class="form-grid">
+        
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name" placeholder="Ej: Sprint 1">
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>El nombre es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Fechas</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate formControlName="startDate" placeholder="Inicio">
+            <input matEndDate formControlName="endDate" placeholder="Fin">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          
+          @if (form.get('startDate')?.hasError('required') || form.get('endDate')?.hasError('required')) {
+            <mat-error>Las fechas son obligatorias.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Objetivo</mat-label>
+          <textarea matInput formControlName="goal" rows="2" placeholder="¿Qué vamos a lograr?"></textarea>
+          @if (form.get('goal')?.hasError('required')) {
+            <mat-error>El objetivo es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="PENDING">Pendiente</mat-option>
+            <mat-option value="ACTIVE">Activo</mat-option>
+            <mat-option value="COMPLETED">Completado</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="modal-actions">
+      <button mat-button type="button" [disabled]="isLoading()" (click)="onCancel()" class="minimal-btn">
+        Cancelar
+      </button>
+      <button mat-flat-button type="submit" [disabled]="form.invalid || isLoading()" class="minimal-primary-btn">
+        @if (isLoading()) {
+          Guardando...
+        } @else {
+          Guardar
+        }
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

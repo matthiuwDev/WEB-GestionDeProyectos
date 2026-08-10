@@ -1,45 +1,44 @@
-<h2 mat-dialog-title>{{ isEditMode() ? 'Editar Historia de Usuario' : 'Crear Nueva Historia de Usuario' }}</h2>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
-    <div class="form-container">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" placeholder="Ej: Implementar Login">
-        @if (form.get('name')?.hasError('required')) {
-          <mat-error>
-            El nombre es obligatorio
-          </mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descripción</mat-label>
-        <textarea 
-          matInput 
-          formControlName="description" 
-          placeholder="Detalles de la historia..."
-          rows="4"
-        ></textarea>
-      </mat-form-field>
+<div class="modal-wrapper">
+  <div class="modal-header">
+    <div class="header-titles">
+      <h2>{{ isEditMode() ? 'Editar Historia' : 'Nueva Historia' }}</h2>
     </div>
-  </mat-dialog-content>
+    <button mat-icon-button (click)="onCancel()" class="close-btn" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" [disabled]="isLoading()" (click)="onCancel()">
-      Cancelar
-    </button>
-    <button 
-      mat-flat-button 
-      color="primary" 
-      type="submit" 
-      [disabled]="form.invalid || isLoading()"
-    >
-      @if (isLoading()) {
-        <mat-spinner diameter="20" class="spinner"></mat-spinner>
-      } @else {
-        <span>Guardar</span>
-      }
-    </button>
-  </mat-dialog-actions>
-</form>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="modal-content">
+      <div class="form-grid">
+        
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Título</mat-label>
+          <input matInput formControlName="name" placeholder="Ej: Como usuario quiero...">
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>El nombre es obligatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="description" placeholder="Detalles o criterios de aceptación..." rows="4"></textarea>
+        </mat-form-field>
+
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="modal-actions">
+      <button mat-button type="button" [disabled]="isLoading()" (click)="onCancel()" class="minimal-btn">
+        Cancelar
+      </button>
+      <button mat-flat-button type="submit" [disabled]="form.invalid || isLoading()" class="minimal-primary-btn">
+        @if (isLoading()) {
+          Guardando...
+        } @else {
+          {{ isEditMode() ? 'Guardar' : 'Crear' }}
+        }
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

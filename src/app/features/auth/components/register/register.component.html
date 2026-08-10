@@ -1,0 +1,94 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="brand-header">
+      <h2>Gestión</h2>
+    </div>
+
+    <div class="auth-header">
+      <h3>Crear Cuenta</h3>
+      <p>
+        @if (inviteToken) {
+          <span class="invite-badge">
+            Invitación recibida. Completa tus datos para unirte.
+          </span>
+        } @else {
+          Regístrate para comenzar a gestionar tus proyectos.
+        }
+      </p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <mat-form-field appearance="outline" class="full-width minimal-input">
+        <mat-label>Nombre completo</mat-label>
+        <input matInput formControlName="name" placeholder="Ej. Mateo Espinosa" autocomplete="name" />
+        @if (registerForm.controls.name.errors?.['required'] && registerForm.controls.name.touched) {
+          <mat-error>El nombre es obligatorio.</mat-error>
+        }
+        @if (registerForm.controls.name.errors?.['minlength'] && registerForm.controls.name.touched) {
+          <mat-error>Debe tener al menos 3 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width minimal-input">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com" autocomplete="email" />
+        @if (registerForm.controls.email.errors?.['required'] && registerForm.controls.email.touched) {
+          <mat-error>El correo electrónico es obligatorio.</mat-error>
+        }
+        @if (registerForm.controls.email.errors?.['email'] && registerForm.controls.email.touched) {
+          <mat-error>Formato de correo inválido.</mat-error>
+        }
+        @if (inviteEmail) {
+          <mat-hint>Correo vinculado a la invitación recibida.</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width minimal-input">
+        <mat-label>Contraseña</mat-label>
+        <input 
+          matInput 
+          [type]="showPassword() ? 'text' : 'password'" 
+          formControlName="password" 
+          placeholder="••••••••" 
+          autocomplete="new-password" 
+        />
+        <button 
+          type="button" 
+          mat-icon-button 
+          matSuffix 
+          (click)="togglePasswordVisibility()" 
+          [matTooltip]="showPassword() ? 'Ocultar' : 'Ver'"
+          tabindex="-1"
+          class="minimal-icon-btn">
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (registerForm.controls.password.errors?.['required'] && registerForm.controls.password.touched) {
+          <mat-error>La contraseña es obligatoria.</mat-error>
+        }
+        @if (registerForm.controls.password.errors?.['minlength'] && registerForm.controls.password.touched) {
+          <mat-error>Debe tener al menos 6 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <button 
+        mat-flat-button 
+        color="primary" 
+        type="submit" 
+        class="submit-button" 
+        [disabled]="registerForm.invalid || isLoading()">
+        @if (isLoading()) {
+          Registrando...
+        } @else {
+          Crear Cuenta
+        }
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span class="auth-footer-text">¿Ya tienes cuenta?</span>
+      <a routerLink="/login" [state]="{ inviteToken: inviteToken, projectId: projectId, inviteEmail: inviteEmail }" class="minimal-link">
+        Inicia sesión
+      </a>
+    </div>
+  </div>
+</div>

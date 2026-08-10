@@ -1,0 +1,19 @@
+<div class="activation-container">
+  @if (isLoading()) {
+    <div class="status-box">
+      <mat-spinner diameter="50" color="primary"></mat-spinner>
+      <h2>Validando invitación...</h2>
+      <p>Por favor espera un momento.</p>
+    </div>
+  } @else if (error()) {
+    <div class="status-box error-box">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <h2>¡Ups! Algo salió mal</h2>
+      <p>{{ error() }}</p>
+      
+      <button mat-flat-button color="primary" (click)="goToLogin()">
+        Ir a Inicio de Sesión
+      </button>
+    </div>
+  }
+</div>

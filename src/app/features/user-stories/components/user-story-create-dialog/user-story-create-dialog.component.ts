@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, signal, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -7,10 +6,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { UserStoriesService } from '../../services/user-stories.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
-import { CreateUserStoryDto, UserStory } from '../../models/user-story.interface';
+import { CreateUserStoryDto } from '../../models/user-story.interface';
 import { ProjectContextService } from '../../../../core/services/project-context.service';
 
 @Component({
@@ -24,18 +25,19 @@ import { ProjectContextService } from '../../../../core/services/project-context
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './user-story-create-dialog.component.html',
   styleUrl: './user-story-create-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserStoryCreateDialogComponent {
+export class UserStoryCreateDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly dialogRef = inject(MatDialogRef<UserStoryCreateDialogComponent>);
   private readonly projectContext = inject(ProjectContextService);
   private readonly userStoriesService = inject(UserStoriesService);
   private readonly notificationService = inject(NotificationService);
-  private readonly destroyRef = inject(DestroyRef);
   protected data = inject<any>(MAT_DIALOG_DATA);
 
   isEditMode = signal(false);

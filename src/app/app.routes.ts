@@ -12,6 +12,14 @@ export const routes: Routes = [
     path: 'login', 
     loadComponent: () => import('./features/auth/components/login/login.component').then(m => m.LoginComponent)
   },
+  { 
+    path: 'activate/:token', 
+    loadComponent: () => import('./features/users/pages/activate-invitation/activate-invitation.component').then(m => m.ActivateInvitationComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/auth/components/register/register.component').then(m => m.RegisterComponent)
+  },
   {
     path: 'projects',
     canActivate: [authGuard],

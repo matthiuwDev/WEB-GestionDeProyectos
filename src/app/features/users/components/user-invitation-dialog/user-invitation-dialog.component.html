@@ -1,29 +1,40 @@
-<h2 mat-dialog-title>Invitar Usuarios</h2>
-
-<form [formGroup]="userInvitationForm" (ngSubmit)="onSubmit()">
-  <mat-dialog-content>
-    <div class="form-grid">
-      <mat-form-field appearance="outline">
-        <mat-label>Correo Electrónico del usuario</mat-label>
-        <input matInput formControlName="email" placeholder="Ej. john.doe@example.com">
-        @if (userInvitationForm.controls.email.errors?.['required']) {
-          <mat-error>El correo electrónico es obligatorio</mat-error>
-        }
-        @if (userInvitationForm.controls.email.errors?.['email']) {
-          <mat-error>El correo electrónico no es válido</mat-error>
-        }
-      </mat-form-field>
+<div class="modal-wrapper">
+  <div class="modal-header">
+    <div class="header-titles">
+      <h2>Invitar Colaborador</h2>
     </div>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading()">Cancelar</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="userInvitationForm.invalid || isLoading()">
-      @if (isLoading()) {
-        Enviando...
-      } @else {
-        Enviar Invitación
-      }
+    <button mat-icon-button (click)="onCancel()" class="close-btn" type="button">
+      <mat-icon>close</mat-icon>
     </button>
-  </mat-dialog-actions>
-</form>
+  </div>
+
+  <form [formGroup]="userInvitationForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="modal-content">
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width minimal-input">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="Ej. dev@empresa.com">
+          @if (userInvitationForm.controls.email.errors?.['required'] && userInvitationForm.controls.email.touched) {
+            <mat-error>El correo electrónico es obligatorio.</mat-error>
+          }
+          @if (userInvitationForm.controls.email.errors?.['email'] && userInvitationForm.controls.email.touched) {
+            <mat-error>Formato inválido.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="modal-actions">
+      <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading()" class="minimal-btn">
+        Cancelar
+      </button>
+      <button mat-flat-button type="submit" [disabled]="userInvitationForm.invalid || isLoading()" class="minimal-primary-btn">
+        @if (isLoading()) {
+          Enviando...
+        } @else {
+          Invitar
+        }
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

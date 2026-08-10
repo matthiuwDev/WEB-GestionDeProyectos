@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SprintsService } from '../../services/sprints.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
@@ -28,6 +30,8 @@ import { CreateSprintDto } from '../../models/sprint.interface';
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './sprint-create-dialog.component.html',
   styleUrl: './sprint-create-dialog.component.scss',

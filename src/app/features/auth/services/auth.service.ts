@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; // 🛡️ Importar Router
 import { environment } from '../../../../environments/environment.development';
 import { Observable, tap } from 'rxjs'; 
-import { AuthResponse, LoginCredentials, User } from '../models/auth.interface';
+import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '../models/auth.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,6 +20,10 @@ export class AuthService {
         this.currentUser.set(response.data); 
       })
     );
+  }
+
+  register(credentials: RegisterCredentials): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, credentials);
   }
 
   saveToken(token: string): void {

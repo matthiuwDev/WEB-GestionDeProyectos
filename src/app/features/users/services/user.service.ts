@@ -4,6 +4,8 @@ import { environment } from '../../../../environments/environment';
 import {
     UserInvitationResponse,
     UserListResponse,
+    ValidationResponse,
+    AcceptInvitationResponse
 } from '../models/user.interface';
 import { Observable } from 'rxjs';
 import { ProjectResponse } from '../../projects/models/project.interface';
@@ -21,5 +23,13 @@ export class UserService {
 
   inviteUser(projectId: number, email: string): Observable<UserInvitationResponse> {
     return this.http.post<UserInvitationResponse>(`${this.apiUrl}/${projectId}/invite`, { email });
+  }
+
+  validateInvitation(token: string): Observable<ValidationResponse> {
+    return this.http.get<ValidationResponse>(`${environment.apiUrl}/projects/invitations/validate/${token}`);
+  }
+
+  acceptInvitation(token: string): Observable<AcceptInvitationResponse> {
+    return this.http.post<AcceptInvitationResponse>(`${environment.apiUrl}/projects/invitations/accept`, { token });
   }
 }

@@ -1,8 +1,7 @@
 <mat-sidenav-container class="shell-container">
   <mat-sidenav #sidenav mode="side" opened class="shell-sidenav">
     <div class="sidenav-header">
-      <mat-icon color="primary">rocket_launch</mat-icon>
-      <span>Gestión Ágil</span>
+      <span class="app-title">Gestión</span>
     </div>
 
     <mat-nav-list>
@@ -33,8 +32,8 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="shell-content">
-    <mat-toolbar color="primary" class="shell-toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-toolbar class="shell-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
         <mat-icon>menu</mat-icon>
       </button>
 

@@ -4,26 +4,51 @@
 
 .shell-sidenav {
   width: 260px;
-  background-color: var(--surface-alt);
-  border-right: 1px solid var(--gray-100);
+  background-color: var(--surface);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 
   .sidenav-header {
-    padding: 24px;
+    padding: 24px 32px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--primary);
-    border-bottom: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--border-color);
+    
+    .app-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+  }
+
+  mat-nav-list {
+    padding-top: 16px;
+  }
+
+  .mat-mdc-list-item {
+    margin: 4px 16px;
+    border-radius: 8px;
+    color: var(--gray-700);
+    
+    mat-icon {
+      color: var(--gray-400);
+    }
+
+    &:hover {
+      background-color: var(--gray-50);
+      color: var(--primary);
+      mat-icon {
+        color: var(--gray-700);
+      }
+    }
   }
 
   .active-link {
-    background-color: var(--gray-100) !important;
+    background-color: var(--gray-50) !important;
     color: var(--primary) !important;
-    font-weight: 600;
+    font-weight: 500;
 
     mat-icon {
       color: var(--primary);
@@ -46,30 +71,42 @@
 .shell-toolbar {
   display: flex;
   align-items: center;
-  box-shadow: var(--shadow-sm);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--primary);
   z-index: 2;
+  box-shadow: none;
+  padding: 0 32px;
+
+  .menu-btn {
+    margin-right: 16px;
+    color: var(--gray-700);
+  }
 
   .spacer {
     flex: 1 1 auto;
   }
 
   .project-name {
-    margin-left: 8px;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 15px;
   }
 
   .project-priority {
-    font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 4px 12px;
-    border-radius: 20px;
+    font-size: 13px;
+    color: var(--gray-700);
+    background: var(--gray-50);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
   }
 }
 
 .main-container {
-  padding: 24px;
+  padding: 32px;
   position: relative;
   min-height: calc(100vh - 64px);
+  background-color: var(--surface-alt);
 }
 
 .loading-overlay {
