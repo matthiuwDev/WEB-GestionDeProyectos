@@ -1,5 +1,5 @@
 <mat-sidenav-container class="shell-container">
-  <mat-sidenav #sidenav mode="side" opened class="shell-sidenav">
+  <mat-sidenav #sidenav [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()" class="shell-sidenav">
     <div class="sidenav-header">
       <span class="app-title">Gestión</span>
     </div>
@@ -44,9 +44,13 @@
       } @else {
         <span class="project-name">{{ project()?.name }}</span>
         <span class="spacer"></span>
-        <span class="project-priority">
-          Prioridad: {{ project()?.priority }}
-        </span>
+        <div class="header-right-actions">
+          <span class="project-priority">Prioridad: {{ project()?.priority }}</span>
+          <div class="user-profile">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+          <button mat-button class="minimal-logout-btn" (click)="logout()">Salir</button>
+        </div>
       }
     </mat-toolbar>
 

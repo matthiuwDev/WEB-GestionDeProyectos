@@ -1,16 +1,29 @@
 <div class="page-header">
   <div class="title-container">
     <h1>Gestión de Sprints</h1>
-    @if (sprints().length > 0) {
+    @if (allSprints().length > 0) {
       <p class="subtitle">
-        {{ sprints().length }} Sprints en total
+        Mostrando {{ sprints().length }} de {{ allSprints().length }} sprints
       </p>
     }
   </div>
-  <button mat-flat-button color="primary" (click)="openCreateDialog()">
-    <mat-icon>add</mat-icon>
-    Nuevo Sprint
-  </button>
+  
+  <div class="header-actions">
+    <mat-form-field appearance="outline" class="minimal-select" subscriptSizing="dynamic">
+      <mat-label>Filtrar por estado</mat-label>
+      <mat-select (selectionChange)="filterSprintsByStatus($event.value)" [value]="null">
+        <mat-option [value]="null">Todos los estados</mat-option>
+        <mat-option value="PENDING">Pendientes</mat-option>
+        <mat-option value="ACTIVE">Activos</mat-option>
+        <mat-option value="COMPLETED">Completados</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button class="minimal-primary-btn" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Nuevo Sprint
+    </button>
+  </div>
 </div>
 
 <div class="content-container">
@@ -37,42 +50,10 @@
   } @else {
     <div class="sprints-list">
       @for (sprint of sprints(); track sprint.id) {
-        <mat-card class="sprint-card" [ngClass]="'status-' + sprint.status.toLowerCase()">
-          <mat-card-header>
-            <mat-card-title>
-              {{ sprint.name }}
-            </mat-card-title>
-            <mat-card-subtitle>
-              <mat-icon class="date-icon">event</mat-icon>
-              {{ sprint.startDate | date:'mediumDate' }} - {{ sprint.endDate | date:'mediumDate' }}
-            </mat-card-subtitle>
-            
-            <div class="status-badge" [ngClass]="'badge-' + sprint.status.toLowerCase()">
-              {{ sprint.status }}
-            </div>
-          </mat-card-header>
-          
-          <mat-card-content>
-            <p class="sprint-goal">
-              <strong>Objetivo:</strong> {{ sprint.goal || 'Sin objetivo definido' }}
-            </p>
-          </mat-card-content>
-          
-          <mat-divider></mat-divider>
-          
-          <mat-card-actions align="end">
-            <button 
-              mat-icon-button 
-              color="warn" 
-              (click)="deleteSprint(sprint)" 
-              [disabled]="sprint.status === 'ACTIVE'" 
-              [attr.aria-label]="'Eliminar ' + sprint.name"
-              [matTooltip]="sprint.status === 'ACTIVE' ? 'No se puede eliminar un sprint activo' : 'Eliminar sprint'">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-button color="primary" [routerLink]="[sprint.id]">Ver detalles</button>
-          </mat-card-actions>
-        </mat-card>
+        <app-sprint-card 
+          [sprint]="sprint" 
+          (onDelete)="deleteSprint($event)">
+        </app-sprint-card>
       }
     </div>
   }

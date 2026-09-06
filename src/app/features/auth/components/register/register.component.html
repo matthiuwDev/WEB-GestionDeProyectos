@@ -69,6 +69,33 @@
           <mat-error>Debe tener al menos 6 caracteres.</mat-error>
         }
       </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width minimal-input">
+        <mat-label>Confirmar Contraseña</mat-label>
+        <input 
+          matInput 
+          [type]="showPassword() ? 'text' : 'password'" 
+          formControlName="confirmPassword" 
+          placeholder="••••••••" 
+          autocomplete="new-password" 
+        />
+        <button 
+          type="button" 
+          mat-icon-button 
+          matSuffix 
+          (click)="togglePasswordVisibility()" 
+          [matTooltip]="showPassword() ? 'Ocultar' : 'Ver'"
+          tabindex="-1"
+          class="minimal-icon-btn">
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (registerForm.controls.confirmPassword.errors?.['required'] && registerForm.controls.confirmPassword.touched) {
+          <mat-error>La confirmación de contraseña es obligatoria.</mat-error>
+        }
+        @if (registerForm.controls.confirmPassword.errors?.['minlength'] && registerForm.controls.confirmPassword.touched) {
+          <mat-error>Debe tener al menos 6 caracteres.</mat-error>
+        }
+      </mat-form-field>
 
       <button 
         mat-flat-button 

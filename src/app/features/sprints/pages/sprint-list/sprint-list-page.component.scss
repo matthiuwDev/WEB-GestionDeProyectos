@@ -16,6 +16,19 @@
   }
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .minimal-select {
+    width: 200px;
+    ::ng-deep .mdc-text-field--outlined .mdc-notched-outline {
+      border-color: var(--border-color);
+    }
+  }
+}
+
 .content-container {
   padding: 0 16px;
 }
@@ -27,97 +40,33 @@
   justify-content: center;
   padding: 64px 24px;
   text-align: center;
-  background-color: var(--mat-sys-surface-container-lowest);
-  border-radius: 12px;
+  background-color: var(--surface-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   
   mat-icon {
     font-size: 48px;
     height: 48px;
     width: 48px;
     margin-bottom: 16px;
-    color: var(--mat-sys-outline);
+    color: var(--gray-400);
   }
   
   h3 {
     margin: 0 0 8px;
     font-size: 20px;
+    font-weight: 500;
   }
   
   p {
-    color: var(--mat-sys-on-surface-variant);
+    color: var(--gray-700);
     margin: 0 0 24px;
   }
 }
 
 .sprints-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
   gap: 24px;
 }
 
-.sprint-card {
-  position: relative;
-  border-radius: 12px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-  }
-
-  &.status-active {
-    border: 2px solid var(--mat-sys-primary, #0b57d0);
-  }
-  &.status-completed {
-    background-color: var(--mat-sys-surface-container-low, #f8f9fa);
-  }
-
-  mat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-bottom: 12px;
-    
-    ::ng-deep .mat-mdc-card-header-text {
-      flex: 1;
-    }
-  }
-
-  .date-icon {
-    font-size: 16px;
-    height: 16px;
-    width: 16px;
-    vertical-align: text-bottom;
-    margin-right: 4px;
-  }
-
-  .status-badge {
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-    white-space: nowrap;
-
-    &.badge-pending {
-      background-color: #e0e0e0;
-      color: #616161;
-    }
-    &.badge-active {
-      background-color: #e3f2fd;
-      color: #1976d2;
-    }
-    &.badge-completed {
-      background-color: #e8f5e9;
-      color: #388e3c;
-    }
-  }
-
-  .sprint-goal {
-    margin: 16px 0 8px;
-    line-height: 1.5;
-    color: var(--mat-sys-on-surface);
-  }
-}

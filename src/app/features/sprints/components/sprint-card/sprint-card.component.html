@@ -1,0 +1,26 @@
+<mat-card class="sprint-card" [ngClass]="'status-' + sprint().status.toLowerCase()">
+  <mat-card-header>
+    <mat-card-title>{{ sprint().name }}</mat-card-title>
+    <mat-card-subtitle>
+      <mat-icon class="date-icon">calendar_today</mat-icon>
+      {{ sprint().startDate | date }} - {{ sprint().endDate | date }}
+    </mat-card-subtitle>
+    
+    <div class="status-badge badge-{{ sprint().status.toLowerCase() }}">
+      @if (sprint().status === 'PENDING') { Pendiente }
+      @if (sprint().status === 'ACTIVE') { Activo }
+      @if (sprint().status === 'COMPLETED') { Completado }
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="sprint-goal"><strong>Objetivo:</strong> {{ sprint().goal }}</p>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-icon-button color="warn" (click)="onDelete.emit(sprint())" [disabled]="sprint().status === 'ACTIVE'" matTooltip="Eliminar sprint">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-button color="primary">Ver detalles</button>
+  </mat-card-actions>
+</mat-card>

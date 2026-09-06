@@ -45,7 +45,8 @@ export class RegisterComponent implements OnInit {
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
   });
 
   ngOnInit() {
@@ -76,8 +77,15 @@ export class RegisterComponent implements OnInit {
         name: formValue.name,
         email: formValue.email,
         password: formValue.password,
+        confirmPassword: formValue.confirmPassword,
         inviteToken: this.inviteToken
       };
+
+      if(payload.password !== payload.confirmPassword) {
+        this.isLoading.set(false);
+        this.notificationService.error('Las contraseñas no coinciden');
+        return;
+      }
 
       this.authService.register(payload).subscribe({
         next: (response) => {

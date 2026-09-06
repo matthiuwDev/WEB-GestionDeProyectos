@@ -92,13 +92,46 @@
     font-size: 15px;
   }
 
-  .project-priority {
-    font-size: 13px;
-    color: var(--gray-700);
-    background: var(--gray-50);
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
+  .header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .project-priority {
+      font-size: 13px;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gray-50);
+      border: 1px solid var(--border-color);
+      color: var(--gray-400);
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .minimal-logout-btn {
+      color: var(--gray-700);
+      font-weight: 500;
+      padding: 0 16px;
+      &:hover {
+        background-color: var(--gray-50);
+      }
+    }
   }
 }
 

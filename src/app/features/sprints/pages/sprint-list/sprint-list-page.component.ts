@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, effect, OnInit, computed } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +17,10 @@ import { ProjectContextService } from '../../../../core/services/project-context
 import { NotificationService } from '../../../../../app/shared/services/notification.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { SprintCardComponent } from '../../components/sprint-card/sprint-card.component';
 
 @Component({
   selector: 'app-sprint-list-page',
@@ -32,7 +36,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatChipsModule,
     MatDividerModule,
     DatePipe,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatFormFieldModule,
+    SprintCardComponent
   ],
   templateUrl: './sprint-list-page.component.html',
   styleUrl: './sprint-list-page.component.scss',
@@ -44,7 +52,16 @@ export default class SprintListPageComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly notificationService = inject(NotificationService);
 
-  readonly sprints = signal<Sprint[]>([]);
+  readonly allSprints = signal<Sprint[]>([]);
+  readonly statusFilter = signal<string | null>(null);
+  
+  readonly sprints = computed(() => {
+    const filter = this.statusFilter();
+    const all = this.allSprints();
+    if (!filter) return all;
+    return all.filter(s => s.status === filter);
+  });
+
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
 
@@ -70,8 +87,9 @@ export default class SprintListPageComponent implements OnInit {
 
     this.sprintsService.getSprintsByProject(projectId).subscribe({
       next: (response) => {
-        this.sprints.set(response.data);
+        this.allSprints.set(response.data);
         this.isLoading.set(false);
+        this.validateActiveSprint(response.data);
       },
       error: (err) => {
         console.error('Error loading sprints', err);
@@ -79,6 +97,49 @@ export default class SprintListPageComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
+  }
+
+  validateActiveSprint(sprints: Sprint[]): void {
+    const activeSprints = sprints.filter(sprint => sprint.status === 'ACTIVE');
+    if (activeSprints.length > 1) {
+      this.notificationService.error('Hay más de un sprint ACTIVO. Por favor, revisa la configuración.');
+    }
+
+    let hasUpdates = false;
+    const now = new Date();
+
+    sprints.forEach(sprint => {
+      if (!sprint.endDate) return;
+
+      const endDate = new Date(sprint.endDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      if (endDate < now && (sprint.status === 'ACTIVE' || sprint.status === 'PENDING')) {
+        const payload = {
+          name: sprint.name,
+          startDate: sprint.startDate,
+          endDate: sprint.endDate,
+          goal: sprint.goal,
+          status: 'COMPLETED' as const,
+          projectId: sprint.projectId
+        };
+
+        this.sprintsService.updateSprint(sprint.id, payload).subscribe({
+          next: () => {
+            this.notificationService.info(`El sprint "${sprint.name}" ha sido marcado como COMPLETADO por finalización de fecha.`);
+            hasUpdates = true;
+          },
+          error: (err) => {
+            console.error(`Error actualizando el sprint ${sprint.name}:`, err);
+          }
+        });
+      }
+    });
+
+
+    if (hasUpdates) {
+      setTimeout(() => this.loadSprints(this.projectContext.projectId()!), 1000);
+    }
   }
 
   retryLoad(): void {
@@ -103,6 +164,10 @@ export default class SprintListPageComponent implements OnInit {
     });
   }
 
+  filterSprintsByStatus(status: string | null): void {
+    this.statusFilter.set(status || null);
+  }
+
   deleteSprint(sprint: Sprint): void {
     if (sprint.status === 'ACTIVE') {
       this.notificationService.error('No se puede eliminar un sprint ACTIVO');
@@ -122,8 +187,7 @@ export default class SprintListPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Optimistic delete
-        this.sprints.update(list => list.filter(s => s.id !== sprint.id));
+        this.allSprints.update(list => list.filter(s => s.id !== sprint.id));
 
         this.sprintsService.deleteSprint(sprint.id).subscribe({
           next: () => {
@@ -132,8 +196,7 @@ export default class SprintListPageComponent implements OnInit {
           error: (err) => {
             console.error('Error deleting sprint', err);
             this.notificationService.error('No se pudo eliminar el sprint.');
-            // Rollback
-            this.sprints.update(list => [...list, sprint]);
+            this.allSprints.update(list => [...list, sprint]);
           }
         });
       }
