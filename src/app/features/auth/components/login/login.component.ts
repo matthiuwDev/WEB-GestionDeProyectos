@@ -92,7 +92,6 @@ export class LoginComponent implements OnInit {
               error: (err) => {
                 console.error('Error al aceptar invitación', err);
                 this.isLoading.set(false);
-                this.notificationService.error('Error al unirte al proyecto');
                 this.router.navigate(['/projects']);
               }
             });
@@ -104,7 +103,6 @@ export class LoginComponent implements OnInit {
         error: (err) => { 
           console.error('Error al iniciar sesión', err);
           this.isLoading.set(false);
-          this.notificationService.error('Credenciales incorrectas o error en el servidor');
         }
       });
     } else {

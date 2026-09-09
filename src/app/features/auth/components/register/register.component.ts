@@ -104,7 +104,6 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.notificationService.error(err.error?.message || 'Error al registrar el usuario');
         }
       });
     } else {

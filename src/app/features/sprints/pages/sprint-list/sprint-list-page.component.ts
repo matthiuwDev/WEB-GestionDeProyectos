@@ -8,7 +8,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { DatePipe } from '@angular/common';
 
 import { SprintsService } from '../../services/sprints.service';
 import { Sprint } from '../../models/sprint.interface';
@@ -35,7 +34,6 @@ import { SprintCardComponent } from '../../components/sprint-card/sprint-card.co
     MatCardModule,
     MatChipsModule,
     MatDividerModule,
-    DatePipe,
     MatTooltipModule,
     MatSelectModule,
     MatOptionModule,
@@ -195,7 +193,6 @@ export default class SprintListPageComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting sprint', err);
-            this.notificationService.error('No se pudo eliminar el sprint.');
             this.allSprints.update(list => [...list, sprint]);
           }
         });

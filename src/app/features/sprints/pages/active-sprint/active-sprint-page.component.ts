@@ -120,7 +120,6 @@ export default class ActiveSprintPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating task status', err);
-        this.notificationService.error('Error al mover la tarea');
         this.loadBoardData(this.activeSprint()!.id);
       }
     });

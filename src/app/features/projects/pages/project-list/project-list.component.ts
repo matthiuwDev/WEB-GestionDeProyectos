@@ -67,7 +67,6 @@ export class ProjectListComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar proyectos', err);
         this.isLoading.set(false);
-        this.notificationService.error('Error al cargar los proyectos');
       }
     });
   }
@@ -121,10 +120,6 @@ export class ProjectListComponent implements OnInit {
           next: () => {
             this.projects.update(list => list.filter(p => p.id !== project.id));
             this.notificationService.success('Proyecto eliminado correctamente');
-          },
-          error: (err) => {
-            const message = err.error?.message || 'Error al eliminar el proyecto';
-            this.notificationService.error(message);
           }
         });
       }

@@ -135,7 +135,6 @@ export default class BacklogPageComponent {
           },
           error: (err) => {
             console.error('Error deleting user story', err);
-            this.notificationService.error('No se pudo eliminar la historia de usuario.');
           }
         });
       }

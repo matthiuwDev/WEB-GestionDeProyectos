@@ -84,7 +84,6 @@ export class UserStoryCreateDialogComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error updating user story', err);
-            this.notificationService.error('Error al actualizar la historia de usuario');
             this.isLoading.set(false);
           },
         });
@@ -106,7 +105,6 @@ export class UserStoryCreateDialogComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error creating user story', err);
-            this.notificationService.error('Error al crear la historia de usuario');
             this.isLoading.set(false);
           },
         });

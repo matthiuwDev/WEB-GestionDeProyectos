@@ -6,10 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { Sprint } from '../../models/sprint.interface';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-sprint-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, DatePipe, MatTooltipModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, DatePipe, MatTooltipModule, RouterModule],
   templateUrl: './sprint-card.component.html',
   styleUrl: './sprint-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

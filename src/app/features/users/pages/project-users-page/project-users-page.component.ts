@@ -114,7 +114,7 @@ export default class ProjectUsersPageComponent implements OnInit {
         this.loadUsers(projectId);
       },
       error: () => {
-        this.notificationService.error('Error al reenviar la invitación');
+        // Handled by global interceptor
       }
     });
   }

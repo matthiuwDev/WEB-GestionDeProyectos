@@ -84,7 +84,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading story', err);
-        this.notificationService.error('Error al cargar la historia de usuario');
         this.isLoading.set(false);
       }
     });
@@ -98,7 +97,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading tasks', err);
-        this.notificationService.error('Error al cargar las tareas');
         this.isLoading.set(false);
       }
     });
@@ -146,7 +144,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error saving story', err);
-        this.notificationService.error('Error al guardar la historia');
         this.loadUserStoryAndTasks(currentStory.id);
       }
     });
@@ -175,7 +172,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error creating task', err);
-        this.notificationService.error('Error al añadir la tarea');
         this.isAddingTask.set(false);
       }
     });
@@ -195,7 +191,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating task status', err);
-        this.notificationService.error('Error al actualizar estado');
         this.tasks.update(list => list.map(t => t.id === task.id ? { ...t, status: originalStatus } : t));
       }
     });
@@ -211,7 +206,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error deleting task', err);
-        this.notificationService.error('Error al eliminar tarea');
         this.tasks.update(list => [...list, task]);
       }
     });

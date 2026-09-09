@@ -96,8 +96,6 @@ export class SprintCreateDialogComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error creating sprint', err);
-        const errorMsg = err.error?.message || 'Ya existe un sprint activo o hubo un error.';
-        this.notificationService.error(errorMsg);
         this.isLoading.set(false);
       }
     });

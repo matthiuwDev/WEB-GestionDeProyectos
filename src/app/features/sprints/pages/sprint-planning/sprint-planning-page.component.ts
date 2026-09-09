@@ -71,7 +71,6 @@ export default class SprintPlanningPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading sprint', err);
-        this.notificationService.error('Error al cargar datos del sprint');
       }
     });
 
@@ -85,7 +84,6 @@ export default class SprintPlanningPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading stories', err);
-        this.notificationService.error('Error al cargar historias de usuario');
         this.isLoading.set(false);
       }
     });
@@ -138,7 +136,6 @@ export default class SprintPlanningPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error moving story', err);
-        this.notificationService.error('Error al mover la historia');
         // Rollback on error
         this.loadData();
       }
