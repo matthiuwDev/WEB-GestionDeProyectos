@@ -43,6 +43,7 @@ export default class BacklogPageComponent {
   readonly userStories = signal<UserStory[]>([]);
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly isOwner = this.projectContext.isOwner;
 
   constructor() {
     effect(() => {
@@ -128,7 +129,8 @@ export default class BacklogPageComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userStoriesService.deleteUserStory(story.id).subscribe({
+        const projectId = this.projectContext.projectId()!;
+        this.userStoriesService.deleteUserStory(story.id, projectId).subscribe({
           next: () => {
             this.userStories.update(list => list.filter(s => s.id !== story.id));
             this.notificationService.success('Historia de usuario eliminada con éxito');

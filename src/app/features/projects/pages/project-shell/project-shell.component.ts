@@ -6,7 +6,9 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -52,15 +54,21 @@ export default class ProjectShellComponent {
   readonly project = this.projectContext.project;
   readonly isLoading = this.projectContext.isLoading;
   readonly error = this.projectContext.error;
+  readonly isOwner = this.projectContext.isOwner;
   
   readonly isMobile = signal(false);
 
+
+  private readonly route = inject(ActivatedRoute);
+
   constructor() {
     effect(() => {
-      // Establece el ID del proyecto en el contexto, lo que dispara la carga de datos
-      this.projectContext.setProjectId(this.projectId());
+      const id = this.route.snapshot.paramMap.get('projectId');
+      if (id) {
+        this.projectContext.setProjectId(Number(id));
+      }
     });
-
+    // Existing breakpointObserver effect remains
     this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
       .pipe(takeUntilDestroyed())
       .subscribe(result => {

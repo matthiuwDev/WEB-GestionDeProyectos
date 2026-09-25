@@ -52,6 +52,7 @@ export default class SprintListPageComponent implements OnInit {
 
   readonly allSprints = signal<Sprint[]>([]);
   readonly statusFilter = signal<string | null>(null);
+  readonly isOwner = this.projectContext.isOwner;
   
   readonly sprints = computed(() => {
     const filter = this.statusFilter();
@@ -187,7 +188,8 @@ export default class SprintListPageComponent implements OnInit {
       if (result) {
         this.allSprints.update(list => list.filter(s => s.id !== sprint.id));
 
-        this.sprintsService.deleteSprint(sprint.id).subscribe({
+        const projectId = this.projectContext.projectId()!;
+        this.sprintsService.deleteSprint(sprint.id, projectId).subscribe({
           next: () => {
             this.notificationService.success('Sprint eliminado con éxito');
           },

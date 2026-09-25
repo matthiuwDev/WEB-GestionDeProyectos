@@ -1,6 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { ProjectsService } from '../../features/projects/services/projects.service';
 import { Project } from '../../features/projects/models/project.interface';
+import { AuthService } from '../../features/auth/services/auth.service';
 import { finalize } from 'rxjs';
 
 @Injectable({
@@ -20,6 +21,30 @@ export class ProjectContextService {
   readonly project = this._project.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
   readonly error = this._error.asReadonly();
+
+  // Roles helpers
+  private readonly authService = inject(AuthService);
+  
+  readonly projectRole = computed(() => {
+    const project = this._project() as any;
+    console.log('Project in projectRole computed:', project);
+    const user = this.authService.currentUser();
+    console.log('Current user in projectRole computed:', user);
+    if (!project || !user) return null;
+
+    if (project.projects_users?.role) return project.projects_users.role;
+    if (project.role) return project.role;
+
+    if (project.users && Array.isArray(project.users)) {
+      const projectUser = project.users.find((u: any) => Number(u.id) === Number(user.id));
+      return projectUser?.projects_users?.role || null;
+    }
+
+    return null;
+  });
+
+  readonly isOwner = computed(() => this.projectRole() === 'OWNER');
+  readonly isAdmin = computed(() => this.authService.currentUser()?.role === 'ADMIN');
 
   // Computed helper
   readonly hasProject = computed(() => !!this._project());

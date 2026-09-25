@@ -79,7 +79,9 @@ export default class ActiveSprintPageComponent implements OnInit {
   }
 
   loadBoardData(sprintId: number) {
-    this.userStoriesService.getUserStories({ sprintId, includeTasks: true }).subscribe({
+    const projectId = this.projectContext.projectId();
+    if (!projectId) { this.error.set('No se encontró el proyecto actual.'); this.isLoading.set(false); return; }
+    this.userStoriesService.getUserStories({ projectId, sprintId, includeTasks: true }).subscribe({
       next: (res) => {
         this.userStories.set(res.data);
         this.isLoading.set(false);
@@ -114,7 +116,8 @@ export default class ActiveSprintPageComponent implements OnInit {
     currentStories[storyIndex] = storyToUpdate;
     this.userStories.set(currentStories);
 
-    this.tasksService.updateTask(task.id, { status: newStatus }).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.updateTask(task.id, { status: newStatus, projectId }).subscribe({
       next: () => {
         // UI actualizada correctamente, no se necesita hacer nada más
       },

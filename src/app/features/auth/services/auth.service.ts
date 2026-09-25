@@ -13,6 +13,25 @@ export class AuthService {
 
   currentUser = signal<User | null>(null);
 
+  constructor() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = token.split('.')[1];
+        const decoded = JSON.parse(atob(payload));
+        this.currentUser.set({
+          id: decoded.id,
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role
+        });
+      } catch (e) {
+        console.error('Error decoding token', e);
+        this.logout();
+      }
+    }
+  }
+
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: AuthResponse) => {

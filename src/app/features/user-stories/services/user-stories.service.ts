@@ -32,15 +32,18 @@ export class UserStoriesService {
     return this.http.post<UserStoryResponse>(this.apiUrl, userStory);
   }
 
-  getUserStoryById(id: number): Observable<UserStoryResponse> {
-    return this.http.get<UserStoryResponse>(`${this.apiUrl}/${id}`);
+  getUserStoryById(id: number, projectId?: number): Observable<UserStoryResponse> {
+    let url = `${this.apiUrl}/${id}`;
+    if (projectId) url += `?projectId=${projectId}`;
+    return this.http.get<UserStoryResponse>(url);
   }
 
-  updateUserStory(id: number, userStory: Partial<CreateUserStoryDto>): Observable<UserStoryResponse> {
+  updateUserStory(id: number, userStory: Partial<CreateUserStoryDto> & { projectId?: number }): Observable<UserStoryResponse> {
     return this.http.put<UserStoryResponse>(`${this.apiUrl}/${id}`, userStory);
   }
 
-  deleteUserStory(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteUserStory(id: number, projectId?: number): Observable<void> {
+    const url = projectId ? `${this.apiUrl}/${id}?projectId=${projectId}` : `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
   }
 }

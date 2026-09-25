@@ -46,10 +46,12 @@ export default class ProjectUsersPageComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'email', 'status', 'actions'];
 
+  readonly isOwner = this.projectContext.isOwner;
+
   constructor() {
     effect(() => {
       const id = this.projectContext.projectId();
-      if (id !== null) {
+      if (id !== null && this.isOwner()) {
         this.loadUsers(id);
       }
     });
@@ -57,7 +59,9 @@ export default class ProjectUsersPageComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.projectContext.projectId();
-    if (id !== null) {
+    console.log('Project ID:', id);
+    console.log('Is Owner:', this.isOwner());
+    if (id !== null && this.isOwner()) {
       this.loadUsers(id);
     }
   }

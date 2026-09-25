@@ -36,6 +36,7 @@
           #backlogList="cdkDropList"
           [cdkDropListData]="backlogStories()"
           [cdkDropListConnectedTo]="[sprintList]"
+          [cdkDropListDisabled]="!isOwner()"
           (cdkDropListDropped)="drop($event, 'BACKLOG')">
           
           @for (story of backlogStories(); track story.id) {
@@ -66,6 +67,7 @@
           #sprintList="cdkDropList"
           [cdkDropListData]="sprintStories()"
           [cdkDropListConnectedTo]="[backlogList]"
+          [cdkDropListDisabled]="!isOwner()"
           (cdkDropListDropped)="drop($event, 'SPRINT')">
           
           @for (story of sprintStories(); track story.id) {

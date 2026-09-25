@@ -7,10 +7,12 @@
       </p>
     }
   </div>
-  <button mat-flat-button color="primary" (click)="openCreateDialog()">
-    <mat-icon>add</mat-icon>
-    Nueva Historia
-  </button>
+  @if (isOwner()) {
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Nueva Historia
+    </button>
+  }
 </div>
 
 <div class="content-container">
@@ -30,9 +32,11 @@
       <mat-icon>assignment</mat-icon>
       <h3>El backlog está vacío</h3>
       <p>Comienza creando la primera historia de usuario para este proyecto.</p>
-      <button mat-stroked-button color="primary" (click)="openCreateDialog()">
-        Crear Historia
-      </button>
+      @if (isOwner()) {
+        <button mat-stroked-button color="primary" (click)="openCreateDialog()">
+          Crear Historia
+        </button>
+      }
     </div>
   } @else {
     <div class="stories-list">
@@ -49,10 +53,12 @@
           </mat-card-content>
           <mat-divider></mat-divider>
           <mat-card-actions align="end">
-            <button mat-icon-button color="warn" (click)="deleteUserStory(story)" aria-label="Eliminar historia">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-button color="primary" (click)="openEditDialog(story)">Editar</button>
+            @if (isOwner()) {
+              <button mat-icon-button color="warn" (click)="deleteUserStory(story)" aria-label="Eliminar historia">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-button color="primary" (click)="openEditDialog(story)">Editar</button>
+            }
             <button mat-button [routerLink]="['../user-stories', story.id]">Ver detalles</button>
           </mat-card-actions>
         </mat-card>

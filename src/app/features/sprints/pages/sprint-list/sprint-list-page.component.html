@@ -19,10 +19,12 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-flat-button class="minimal-primary-btn" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
-      Nuevo Sprint
-    </button>
+    @if (isOwner()) {
+      <button mat-flat-button class="minimal-primary-btn" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Nuevo Sprint
+      </button>
+    }
   </div>
 </div>
 
@@ -43,15 +45,18 @@
       <mat-icon>view_timeline</mat-icon>
       <h3>No hay sprints planificados</h3>
       <p>Comienza creando el primer sprint para organizar el trabajo.</p>
-      <button mat-stroked-button color="primary" (click)="openCreateDialog()">
-        Crear Sprint
-      </button>
+      @if (isOwner()) {
+        <button mat-stroked-button color="primary" (click)="openCreateDialog()">
+          Crear Sprint
+        </button>
+      }
     </div>
   } @else {
     <div class="sprints-list">
       @for (sprint of sprints(); track sprint.id) {
         <app-sprint-card 
           [sprint]="sprint" 
+          [isOwner]="isOwner()"
           (onDelete)="deleteSprint($event)">
         </app-sprint-card>
       }

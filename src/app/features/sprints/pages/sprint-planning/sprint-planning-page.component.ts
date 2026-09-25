@@ -43,6 +43,7 @@ export default class SprintPlanningPageComponent implements OnInit {
   readonly backlogStories = signal<UserStory[]>([]);
   readonly sprintStories = signal<UserStory[]>([]);
   readonly isLoading = signal(true);
+  readonly isOwner = this.projectContext.isOwner;
   
   private sprintId: number | null = null;
 
@@ -65,7 +66,7 @@ export default class SprintPlanningPageComponent implements OnInit {
     }
 
     // Load Sprint Info
-    this.sprintsService.getSprintById(this.sprintId).subscribe({
+    this.sprintsService.getSprintById(this.sprintId, projectId).subscribe({
       next: (res) => {
         this.sprint.set(res.data);
       },
@@ -130,7 +131,8 @@ export default class SprintPlanningPageComponent implements OnInit {
   }
 
   private updateStorySprint(story: UserStory, newSprintId: number | null) {
-    this.userStoriesService.updateUserStory(story.id, { sprintId: newSprintId }).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.userStoriesService.updateUserStory(story.id, { sprintId: newSprintId, projectId }).subscribe({
       next: () => {
         this.notificationService.success(newSprintId ? 'Historia asignada al sprint' : 'Historia devuelta al backlog');
       },

@@ -21,9 +21,11 @@
       <div class="header-titles">
         <h1>Proyectos</h1>
       </div>
-      <button mat-flat-button class="create-project-btn" (click)="openCreateDialog()">
-        Nuevo Proyecto
-      </button>
+      @if (isAdmin()) {
+        <button mat-flat-button class="create-project-btn" (click)="openCreateDialog()">
+          Nuevo Proyecto
+        </button>
+      }
     </header>
 
     @if (isLoading()) {
@@ -49,8 +51,10 @@
 
             <div class="card-footer">
               <div class="secondary-actions">
-                <button mat-button class="action-btn" (click)="openEditDialog(project); $event.stopPropagation()">Editar</button>
-                <button mat-button class="action-btn delete-btn" (click)="deleteProject(project); $event.stopPropagation()">Eliminar</button>
+                @if (isAdmin()) {
+                  <button mat-button class="action-btn" (click)="openEditDialog(project); $event.stopPropagation()">Editar</button>
+                  <button mat-button class="action-btn delete-btn" (click)="deleteProject(project); $event.stopPropagation()">Eliminar</button>
+                }
               </div>
             </div>
           </article>
@@ -58,9 +62,11 @@
           <div class="empty-state">
             <h3>Sin proyectos</h3>
             <p>Comienza creando tu primer proyecto.</p>
-            <button mat-stroked-button class="empty-create-btn" (click)="openCreateDialog()">
-              Crear proyecto
-            </button>
+            @if (isAdmin()) {
+              <button mat-stroked-button class="empty-create-btn" (click)="openCreateDialog()">
+                Crear proyecto
+              </button>
+            }
           </div>
         }
       </div>

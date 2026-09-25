@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -37,6 +37,7 @@ export class ProjectListComponent implements OnInit {
   projects = signal<Project[]>([]);
   isLoading = signal<boolean>(false);
   currentUser = this.authService.currentUser;
+  isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
 
   ngOnInit() {
     this.loadProjects();

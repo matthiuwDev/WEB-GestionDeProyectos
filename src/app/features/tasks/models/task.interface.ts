@@ -9,4 +9,5 @@ export interface CreateTaskDto {
   name: string;
   status: 'TODO' | 'IN_PROGRESS' | 'DONE';
   userStoryId: number;
+  projectId?: number;
 }

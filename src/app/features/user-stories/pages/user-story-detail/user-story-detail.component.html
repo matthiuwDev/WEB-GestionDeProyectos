@@ -19,12 +19,12 @@
           <mat-card-header class="story-header">
             @if (!isEditing()) {
               <div class="title-container">
-                <mat-card-title class="story-title" (click)="isEditable() ? enableEdit() : null" [style.cursor]="isEditable() ? 'pointer' : 'default'">
+                <mat-card-title class="story-title" (click)="isStoryEditable() ? enableEdit() : null" [style.cursor]="isStoryEditable() ? 'pointer' : 'default'">
                   {{ currentStory.name }}
                 </mat-card-title>
                 <mat-card-subtitle>Historia de Usuario #{{ currentStory.id }}</mat-card-subtitle>
               </div>
-              @if (isEditable()) {
+              @if (isStoryEditable()) {
                 <button mat-icon-button (click)="enableEdit()" aria-label="Editar" color="primary">
                   <mat-icon>edit</mat-icon>
                 </button>
@@ -39,7 +39,7 @@
 
           <mat-card-content class="story-content">
             @if (!isEditing()) {
-              <div class="description-view" (click)="isEditable() ? enableEdit() : null" [style.cursor]="isEditable() ? 'pointer' : 'default'">
+              <div class="description-view" (click)="isStoryEditable() ? enableEdit() : null" [style.cursor]="isStoryEditable() ? 'pointer' : 'default'">
                 <p [class.empty]="!currentStory.description">
                   {{ currentStory.description || 'Añadir una descripción detallada...' }}
                 </p>
@@ -77,7 +77,7 @@
                 <div class="task-main">
                   <mat-checkbox 
                     [checked]="task.status === 'DONE'"
-                    [disabled]="!isEditable()"
+                    [disabled]="!areTasksEditable()"
                     (change)="updateTaskStatus(task, $event.checked ? 'DONE' : 'TODO')"
                     color="primary">
                     <span class="task-name" [class.completed-text]="task.status === 'DONE'">
@@ -88,14 +88,14 @@
                 
                 <div class="task-actions">
                   <mat-form-field appearance="outline" subscriptSizing="dynamic" class="status-select">
-                    <mat-select [value]="task.status" [disabled]="!isEditable()" (selectionChange)="updateTaskStatus(task, $event.value)">
+                    <mat-select [value]="task.status" [disabled]="!areTasksEditable()" (selectionChange)="updateTaskStatus(task, $event.value)">
                       <mat-option value="TODO">Por hacer</mat-option>
                       <mat-option value="IN_PROGRESS">En progreso</mat-option>
                       <mat-option value="DONE">Completado</mat-option>
                     </mat-select>
                   </mat-form-field>
                   
-                  @if (isEditable()) {
+                  @if (areTasksEditable()) {
                     <button mat-icon-button color="warn" (click)="deleteTask(task)" aria-label="Eliminar tarea">
                       <mat-icon>delete</mat-icon>
                     </button>
@@ -109,7 +109,7 @@
         </div>
 
         <!-- Quick Add Task -->
-        @if (isEditable()) {
+        @if (areTasksEditable()) {
           <mat-card class="quick-add-card">
             <mat-card-content>
               <mat-form-field appearance="outline" class="full-width quick-add-field" subscriptSizing="dynamic">

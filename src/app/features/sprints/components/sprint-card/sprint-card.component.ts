@@ -18,6 +18,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SprintCardComponent {
   sprint = input.required<Sprint>();
+  isOwner = input<boolean>(false);
 
   onDelete = output<Sprint>();
 }
