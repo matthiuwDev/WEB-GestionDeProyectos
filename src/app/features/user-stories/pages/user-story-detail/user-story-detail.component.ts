@@ -55,13 +55,11 @@ export default class UserStoryDetailComponent implements OnInit {
   readonly isOwner = this.projectContext.isOwner;
   
   readonly isStoryEditable = computed(() => {
-    const current = this.story();
-    return current ? current.sprintId === null && this.isOwner() : false;
+    return !!this.story() && this.isOwner();
   });
 
   readonly areTasksEditable = computed(() => {
-    const current = this.story();
-    return current ? current.sprintId === null : false;
+    return !!this.story();
   });
   
   // Model for inline editing
