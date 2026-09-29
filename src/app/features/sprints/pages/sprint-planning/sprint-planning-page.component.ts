@@ -14,6 +14,7 @@ import { SprintsService } from '../../services/sprints.service';
 import { Sprint } from '../../models/sprint.interface';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ProjectContextService } from '../../../../core/services/project-context.service';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-sprint-planning-page',
@@ -25,7 +26,8 @@ import { ProjectContextService } from '../../../../core/services/project-context
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    InitialsPipe
   ],
   templateUrl: './sprint-planning-page.component.html',
   styleUrl: './sprint-planning-page.component.scss',
@@ -43,6 +45,7 @@ export default class SprintPlanningPageComponent implements OnInit {
   readonly backlogStories = signal<UserStory[]>([]);
   readonly sprintStories = signal<UserStory[]>([]);
   readonly isLoading = signal(true);
+  readonly isOwner = this.projectContext.isOwner;
   
   private sprintId: number | null = null;
 
@@ -65,13 +68,12 @@ export default class SprintPlanningPageComponent implements OnInit {
     }
 
     // Load Sprint Info
-    this.sprintsService.getSprintById(this.sprintId).subscribe({
+    this.sprintsService.getSprintById(this.sprintId, projectId).subscribe({
       next: (res) => {
         this.sprint.set(res.data);
       },
       error: (err) => {
         console.error('Error loading sprint', err);
-        this.notificationService.error('Error al cargar datos del sprint');
       }
     });
 
@@ -85,7 +87,6 @@ export default class SprintPlanningPageComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading stories', err);
-        this.notificationService.error('Error al cargar historias de usuario');
         this.isLoading.set(false);
       }
     });
@@ -132,13 +133,13 @@ export default class SprintPlanningPageComponent implements OnInit {
   }
 
   private updateStorySprint(story: UserStory, newSprintId: number | null) {
-    this.userStoriesService.updateUserStory(story.id, { sprintId: newSprintId }).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.userStoriesService.updateUserStory(story.id, { sprintId: newSprintId, projectId }).subscribe({
       next: () => {
         this.notificationService.success(newSprintId ? 'Historia asignada al sprint' : 'Historia devuelta al backlog');
       },
       error: (err) => {
         console.error('Error moving story', err);
-        this.notificationService.error('Error al mover la historia');
         // Rollback on error
         this.loadData();
       }

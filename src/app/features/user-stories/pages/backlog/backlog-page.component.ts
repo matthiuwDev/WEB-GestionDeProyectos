@@ -15,6 +15,7 @@ import { UserStoryCreateDialogComponent } from '../../components/user-story-crea
 import { ProjectContextService } from '../../../../core/services/project-context.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-backlog-page',
@@ -28,6 +29,7 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
     MatProgressSpinnerModule,
     MatCardModule,
     MatDividerModule,
+    InitialsPipe
   ],
   templateUrl: './backlog-page.component.html',
   styleUrl: './backlog-page.component.scss',
@@ -43,6 +45,7 @@ export default class BacklogPageComponent {
   readonly userStories = signal<UserStory[]>([]);
   readonly isLoading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly isOwner = this.projectContext.isOwner;
 
   constructor() {
     effect(() => {
@@ -128,14 +131,14 @@ export default class BacklogPageComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userStoriesService.deleteUserStory(story.id).subscribe({
+        const projectId = this.projectContext.projectId()!;
+        this.userStoriesService.deleteUserStory(story.id, projectId).subscribe({
           next: () => {
             this.userStories.update(list => list.filter(s => s.id !== story.id));
             this.notificationService.success('Historia de usuario eliminada con éxito');
           },
           error: (err) => {
             console.error('Error deleting user story', err);
-            this.notificationService.error('No se pudo eliminar la historia de usuario.');
           }
         });
       }

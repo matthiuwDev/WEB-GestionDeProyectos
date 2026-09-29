@@ -1,25 +1,56 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { ProjectsService } from '../../features/projects/services/projects.service';
 import { Project } from '../../features/projects/models/project.interface';
+import { AuthService } from '../../features/auth/services/auth.service';
 import { finalize } from 'rxjs';
+
+import { UserService } from '../../features/users/services/user.service';
+import { ProjectMember } from '../../features/users/models/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectContextService {
   private readonly projectsService = inject(ProjectsService);
+  private readonly userService = inject(UserService);
 
   // Private state
   private readonly _projectId = signal<number | null>(null);
   private readonly _project = signal<Project | null>(null);
+  private readonly _projectMembers = signal<ProjectMember[]>([]);
   private readonly _isLoading = signal(false);
   private readonly _error = signal<string | null>(null);
 
   // Public read-only signals
   readonly projectId = this._projectId.asReadonly();
   readonly project = this._project.asReadonly();
+  readonly projectMembers = this._projectMembers.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
   readonly error = this._error.asReadonly();
+
+  // Roles helpers
+  private readonly authService = inject(AuthService);
+  
+  readonly projectRole = computed(() => {
+    const project = this._project() as any;
+    console.log('Project in projectRole computed:', project);
+    const user = this.authService.currentUser();
+    console.log('Current user in projectRole computed:', user);
+    if (!project || !user) return null;
+
+    if (project.projects_users?.role) return project.projects_users.role;
+    if (project.role) return project.role;
+
+    if (project.users && Array.isArray(project.users)) {
+      const projectUser = project.users.find((u: any) => Number(u.id) === Number(user.id));
+      return projectUser?.projects_users?.role || null;
+    }
+
+    return null;
+  });
+
+  readonly isOwner = computed(() => this.projectRole() === 'OWNER');
+  readonly isAdmin = computed(() => this.authService.currentUser()?.role === 'ADMIN');
 
   // Computed helper
   readonly hasProject = computed(() => !!this._project());
@@ -49,6 +80,7 @@ export class ProjectContextService {
   clearContext(): void {
     this._projectId.set(null);
     this._project.set(null);
+    this._projectMembers.set([]);
     this._isLoading.set(false);
     this._error.set(null);
   }
@@ -79,5 +111,15 @@ export class ProjectContextService {
           this._project.set(null);
         }
       });
+
+    this.userService.getUsersByProject(id).subscribe({
+      next: (response) => {
+        this._projectMembers.set(response.data);
+      },
+      error: (err) => {
+        console.error('Error loading project members', err);
+        this._projectMembers.set([]);
+      }
+    });
   }
 }

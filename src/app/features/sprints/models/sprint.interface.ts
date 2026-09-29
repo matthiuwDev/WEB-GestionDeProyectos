@@ -19,6 +19,15 @@ export interface CreateSprintDto {
   status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
 }
 
+export interface UpdateSprintDto {
+  projectId: number;
+  name?: string;
+  startDate?: string;
+  endDate?: string;
+  goal?: string;
+  status?: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+}
+
 export interface SprintResponse {
   status: string;
   data: Sprint;

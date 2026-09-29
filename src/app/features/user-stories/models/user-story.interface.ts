@@ -7,6 +7,8 @@ export interface UserStory {
   projectId: number;
   sprintId: number | null;
   position: number | null;
+  assigneeId: number | null;
+  assignee?: { id: number, name: string, email: string };
   createdAt: string;
   updatedAt: string;
   tasks?: Task[];
@@ -18,6 +20,7 @@ export interface CreateUserStoryDto {
   projectId: number;
   sprintId: number | null;
   position: number | null;
+  assigneeId?: number | null;
 }
 
 export interface UserStoryResponse {

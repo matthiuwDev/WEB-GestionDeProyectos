@@ -3,6 +3,14 @@ export interface LoginCredentials {
   password?: string | null;
 }
 
+export interface RegisterCredentials {
+  name?: string | null;
+  email?: string | null;
+  password?: string | null;
+  confirmPassword?: string | null;
+  inviteToken?: string | null;
+}
+
 export interface User {
   id: number;
   name: string;

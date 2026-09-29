@@ -1,10 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ProjectsService } from '../../services/projects.service';
 import { Project, CreateProjectResponse } from '../../models/project.interface';
 
@@ -12,12 +15,15 @@ import { Project, CreateProjectResponse } from '../../models/project.interface';
   selector: 'app-project-create',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './project-create.component.html',
   styleUrl: './project-create.component.scss'
@@ -56,12 +62,11 @@ export class ProjectCreateComponent implements OnInit {
     if (this.projectForm.valid) {
       this.isLoading.set(true);
       const projectData = this.projectForm.getRawValue();
-      console.log("Datos del proyecto a enviar: ", projectData);
       
       const request$ = this.isEditMode() && this.data
         ? this.projectsService.updateProject(this.data.id, projectData)
         : this.projectsService.createProject(projectData);
-      console.log("Observable de la solicitud: ", request$);
+        
       request$.subscribe({
         next: (response: CreateProjectResponse) => {
           this.isLoading.set(false);

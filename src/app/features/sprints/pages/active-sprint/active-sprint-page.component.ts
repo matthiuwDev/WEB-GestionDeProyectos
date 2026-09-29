@@ -14,6 +14,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
 import { Sprint } from '../../models/sprint.interface';
 import { UserStory } from '../../../user-stories/models/user-story.interface';
 import { Task } from '../../../tasks/models/task.interface';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-active-sprint-page',
@@ -25,7 +26,8 @@ import { Task } from '../../../tasks/models/task.interface';
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule,
-    DatePipe
+    DatePipe,
+    InitialsPipe
   ],
   templateUrl: './active-sprint-page.component.html',
   styleUrl: './active-sprint-page.component.scss',
@@ -79,7 +81,9 @@ export default class ActiveSprintPageComponent implements OnInit {
   }
 
   loadBoardData(sprintId: number) {
-    this.userStoriesService.getUserStories({ sprintId, includeTasks: true }).subscribe({
+    const projectId = this.projectContext.projectId();
+    if (!projectId) { this.error.set('No se encontró el proyecto actual.'); this.isLoading.set(false); return; }
+    this.userStoriesService.getUserStories({ projectId, sprintId, includeTasks: true }).subscribe({
       next: (res) => {
         this.userStories.set(res.data);
         this.isLoading.set(false);
@@ -114,13 +118,13 @@ export default class ActiveSprintPageComponent implements OnInit {
     currentStories[storyIndex] = storyToUpdate;
     this.userStories.set(currentStories);
 
-    this.tasksService.updateTask(task.id, { status: newStatus }).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.updateTask(task.id, { status: newStatus, projectId }).subscribe({
       next: () => {
         // UI actualizada correctamente, no se necesita hacer nada más
       },
       error: (err) => {
         console.error('Error updating task status', err);
-        this.notificationService.error('Error al mover la tarea');
         this.loadBoardData(this.activeSprint()!.id);
       }
     });

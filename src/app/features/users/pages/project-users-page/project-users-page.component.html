@@ -1,18 +1,18 @@
-<div class="page-header">
-  <div class="title-container">
-    <h1>Usuarios del Proyecto</h1>
-    @if (users().length > 0) {
-      <p class="subtitle">{{ users().length }} miembros activos e invitados</p>
-    }
+@if (isOwner()) {
+  <div class="page-header">
+    <div class="title-container">
+      <h1>Usuarios del Proyecto</h1>
+      @if (users().length > 0) {
+        <p class="subtitle">{{ users().length }} miembros activos e invitados</p>
+      }
+    </div>
+    <button mat-flat-button color="primary" (click)="openInviteDialog()" class="minimal-primary-btn">
+      Invitar Usuario
+    </button>
   </div>
-  <button mat-flat-button color="primary" (click)="openInviteDialog()">
-    <mat-icon>person_add</mat-icon>
-    Invitar Usuario
-  </button>
-</div>
 
-<div class="content-container">
-  @if (isLoading()) {
+  <div class="content-container">
+    @if (isLoading()) {
     <div class="loading-state">
       <mat-spinner diameter="40"></mat-spinner>
       <p>Cargando usuarios...</p>
@@ -28,7 +28,7 @@
       <mat-icon>groups</mat-icon>
       <h3>No hay usuarios en este proyecto</h3>
       <p>Comienza invitando a tu equipo para colaborar.</p>
-      <button mat-stroked-button color="primary" (click)="openInviteDialog()">
+      <button mat-stroked-button (click)="openInviteDialog()" class="minimal-btn">
         Invitar Usuario
       </button>
     </div>
@@ -103,4 +103,10 @@
       </table>
     </mat-card>
   }
-</div>
+  </div>
+} @else {
+  <div class="error-state">
+    <mat-icon color="warn">lock</mat-icon>
+    <p>Acceso Denegado. Solo el Propietario (OWNER) del proyecto puede acceder a esta sección.</p>
+  </div>
+}

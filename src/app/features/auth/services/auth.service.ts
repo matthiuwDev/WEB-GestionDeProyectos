@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; // 🛡️ Importar Router
 import { environment } from '../../../../environments/environment.development';
 import { Observable, tap } from 'rxjs'; 
-import { AuthResponse, LoginCredentials, User } from '../models/auth.interface';
+import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '../models/auth.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,6 +13,25 @@ export class AuthService {
 
   currentUser = signal<User | null>(null);
 
+  constructor() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = token.split('.')[1];
+        const decoded = JSON.parse(atob(payload));
+        this.currentUser.set({
+          id: decoded.id,
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role
+        });
+      } catch (e) {
+        console.error('Error decoding token', e);
+        this.logout();
+      }
+    }
+  }
+
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: AuthResponse) => {
@@ -20,6 +39,10 @@ export class AuthService {
         this.currentUser.set(response.data); 
       })
     );
+  }
+
+  register(credentials: RegisterCredentials): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, credentials);
   }
 
   saveToken(token: string): void {

@@ -18,6 +18,7 @@ import { UserStory } from '../../models/user-story.interface';
 import { TasksService } from '../../../tasks/services/tasks.service';
 import { Task } from '../../../tasks/models/task.interface';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { ProjectContextService } from '../../../../core/services/project-context.service';
 
 @Component({
   selector: 'app-user-story-detail',
@@ -44,16 +45,24 @@ export default class UserStoryDetailComponent implements OnInit {
   private readonly userStoriesService = inject(UserStoriesService);
   private readonly tasksService = inject(TasksService);
   private readonly notificationService = inject(NotificationService);
+  private readonly projectContext = inject(ProjectContextService);
 
   readonly story = signal<UserStory | null>(null);
   readonly tasks = signal<Task[]>([]);
   readonly isLoading = signal(true);
   readonly isEditing = signal(false);
   
-  readonly isEditable = computed(() => {
-    const current = this.story();
-    return current ? current.sprintId === null : false;
+  readonly isOwner = this.projectContext.isOwner;
+  
+  readonly isStoryEditable = computed(() => {
+    return !!this.story() && this.isOwner();
   });
+
+  readonly areTasksEditable = computed(() => {
+    return !!this.story();
+  });
+  
+  readonly projectMembers = this.projectContext.projectMembers;
   
   // Model for inline editing
   readonly editName = signal('');
@@ -74,8 +83,9 @@ export default class UserStoryDetailComponent implements OnInit {
 
   private loadUserStoryAndTasks(storyId: number): void {
     this.isLoading.set(true);
+    const projectId = this.projectContext.projectId()!;
 
-    this.userStoriesService.getUserStoryById(storyId).subscribe({
+    this.userStoriesService.getUserStoryById(storyId, projectId).subscribe({
       next: (response) => {
         this.story.set(response.data);
         this.editName.set(response.data.name);
@@ -84,21 +94,20 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading story', err);
-        this.notificationService.error('Error al cargar la historia de usuario');
         this.isLoading.set(false);
       }
     });
   }
 
   private loadTasks(storyId: number): void {
-    this.tasksService.getTasksByUserStory(storyId).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.getTasksByUserStory(storyId, projectId).subscribe({
       next: (response) => {
         this.tasks.set(response.data);
         this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error loading tasks', err);
-        this.notificationService.error('Error al cargar las tareas');
         this.isLoading.set(false);
       }
     });
@@ -139,14 +148,14 @@ export default class UserStoryDetailComponent implements OnInit {
     this.story.update(s => s ? { ...s, name: updatedData.name, description: updatedData.description } : s);
     this.isEditing.set(false);
 
-    this.userStoriesService.updateUserStory(currentStory.id, updatedData).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.userStoriesService.updateUserStory(currentStory.id, { ...updatedData, projectId }).subscribe({
       next: (res) => {
         this.story.set(res.data);
         this.notificationService.success('Historia guardada con éxito');
       },
       error: (err) => {
         console.error('Error saving story', err);
-        this.notificationService.error('Error al guardar la historia');
         this.loadUserStoryAndTasks(currentStory.id);
       }
     });
@@ -164,7 +173,8 @@ export default class UserStoryDetailComponent implements OnInit {
     const newTaskDto = {
       name: name,
       status: 'TODO' as const,
-      userStoryId: currentStory.id
+      userStoryId: currentStory.id,
+      projectId: this.projectContext.projectId()!
     };
 
     this.tasksService.createTask(newTaskDto).subscribe({
@@ -175,7 +185,6 @@ export default class UserStoryDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error creating task', err);
-        this.notificationService.error('Error al añadir la tarea');
         this.isAddingTask.set(false);
       }
     });
@@ -189,13 +198,13 @@ export default class UserStoryDetailComponent implements OnInit {
 
     this.tasks.update(list => list.map(t => t.id === task.id ? { ...t, status: newStatus } : t));
 
-    this.tasksService.updateTask(task.id, { status: newStatus }).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.updateTask(task.id, { status: newStatus, projectId }).subscribe({
       next: (res) => {
         this.tasks.update(list => list.map(t => t.id === res.data.id ? res.data : t));
       },
       error: (err) => {
         console.error('Error updating task status', err);
-        this.notificationService.error('Error al actualizar estado');
         this.tasks.update(list => list.map(t => t.id === task.id ? { ...t, status: originalStatus } : t));
       }
     });
@@ -205,14 +214,43 @@ export default class UserStoryDetailComponent implements OnInit {
   deleteTask(task: Task): void {
     this.tasks.update(list => list.filter(t => t.id !== task.id));
 
-    this.tasksService.deleteTask(task.id).subscribe({
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.deleteTask(task.id, projectId).subscribe({
       next: () => {
         this.notificationService.success('Tarea eliminada');
       },
       error: (err) => {
         console.error('Error deleting task', err);
-        this.notificationService.error('Error al eliminar tarea');
         this.tasks.update(list => [...list, task]);
+      }
+    });
+  }
+
+  updateStoryAssignee(assigneeId: number | null): void {
+    const currentStory = this.story();
+    if (!currentStory) return;
+
+    const projectId = this.projectContext.projectId()!;
+    this.userStoriesService.updateUserStory(currentStory.id, { assigneeId, projectId }).subscribe({
+      next: (res) => {
+        this.story.set(res.data);
+      },
+      error: (err) => {
+        console.error('Error updating story assignee', err);
+        this.notificationService.error(err.error?.message || 'Error al actualizar el responsable');
+      }
+    });
+  }
+
+  updateTaskAssignee(task: Task, assigneeId: number | null): void {
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.updateTask(task.id, { assigneeId, projectId }).subscribe({
+      next: (res) => {
+        this.tasks.update(list => list.map(t => t.id === res.data.id ? res.data : t));
+      },
+      error: (err) => {
+        console.error('Error updating task assignee', err);
+        this.notificationService.error(err.error?.message || 'Error al actualizar responsable');
       }
     });
   }
