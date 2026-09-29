@@ -61,6 +61,16 @@
     .title-input {
       margin-top: 8px;
     }
+
+    .header-tools {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+
+      .story-assignee-select {
+        width: 200px;
+      }
+    }
   }
 
   .story-content {
@@ -134,14 +144,14 @@
 
     .task-content {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      gap: 16px;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 16px;
+      gap: 12px;
     }
 
     .task-main {
-      flex: 1;
+      width: 100%;
       
       ::ng-deep .mdc-form-field {
         width: 100%;
@@ -162,10 +172,12 @@
     .task-actions {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 12px;
+      padding-left: 32px; // Alineado con el texto, saltando el checkbox
 
-      .status-select {
-        width: 140px;
+      .status-select, .task-assignee-select {
+        width: 160px;
       }
     }
   }

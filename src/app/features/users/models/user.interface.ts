@@ -1,3 +1,14 @@
+export interface ProjectMember {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export interface ProjectMembersResponse {
+  status: string;
+  data: ProjectMember[];
+}
+
 export interface UserListResponse {
   status: string;
   data: User[];

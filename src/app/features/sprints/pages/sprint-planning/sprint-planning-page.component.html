@@ -41,10 +41,16 @@
           
           @for (story of backlogStories(); track story.id) {
             <mat-card class="story-card drag-box" cdkDrag [routerLink]="['../../user-stories', story.id]">
-              <mat-card-header>
-                <mat-card-title>{{ story.name }}</mat-card-title>
-                <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
-              </mat-card-header>
+              <mat-card-title class="story-title">{{ story.name }}</mat-card-title>
+              
+              <div class="card-footer">
+                <span class="story-id">ID: #{{ story.id }}</span>
+                @if (story.assignee) {
+                  <div class="assignee-badge small-badge" [title]="'Responsable: ' + story.assignee.name">
+                    {{ story.assignee.name | initials }}
+                  </div>
+                }
+              </div>
             </mat-card>
           } @empty {
             <div class="empty-list-placeholder">
@@ -72,15 +78,20 @@
           
           @for (story of sprintStories(); track story.id) {
             <mat-card class="story-card drag-box" cdkDrag [routerLink]="['../../user-stories', story.id]">
-              <mat-card-header>
-                <mat-card-title>{{ story.name }}</mat-card-title>
-                <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
-              </mat-card-header>
+              <mat-card-title class="story-title">{{ story.name }}</mat-card-title>
+              
               @if (story.description) {
-                <mat-card-content>
-                  <p class="story-desc">{{ story.description }}</p>
-                </mat-card-content>
+                <p class="story-desc">{{ story.description }}</p>
               }
+
+              <div class="card-footer">
+                <span class="story-id">ID: #{{ story.id }}</span>
+                @if (story.assignee) {
+                  <div class="assignee-badge small-badge" [title]="'Responsable: ' + story.assignee.name">
+                    {{ story.assignee.name | initials }}
+                  </div>
+                }
+              </div>
             </mat-card>
           } @empty {
             <div class="empty-list-placeholder highlight">
