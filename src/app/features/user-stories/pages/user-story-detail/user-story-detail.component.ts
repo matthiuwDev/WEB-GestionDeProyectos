@@ -62,6 +62,8 @@ export default class UserStoryDetailComponent implements OnInit {
     return !!this.story();
   });
   
+  readonly projectMembers = this.projectContext.projectMembers;
+  
   // Model for inline editing
   readonly editName = signal('');
   readonly editDescription = signal('');
@@ -220,6 +222,35 @@ export default class UserStoryDetailComponent implements OnInit {
       error: (err) => {
         console.error('Error deleting task', err);
         this.tasks.update(list => [...list, task]);
+      }
+    });
+  }
+
+  updateStoryAssignee(assigneeId: number | null): void {
+    const currentStory = this.story();
+    if (!currentStory) return;
+
+    const projectId = this.projectContext.projectId()!;
+    this.userStoriesService.updateUserStory(currentStory.id, { assigneeId, projectId }).subscribe({
+      next: (res) => {
+        this.story.set(res.data);
+      },
+      error: (err) => {
+        console.error('Error updating story assignee', err);
+        this.notificationService.error(err.error?.message || 'Error al actualizar el responsable');
+      }
+    });
+  }
+
+  updateTaskAssignee(task: Task, assigneeId: number | null): void {
+    const projectId = this.projectContext.projectId()!;
+    this.tasksService.updateTask(task.id, { assigneeId, projectId }).subscribe({
+      next: (res) => {
+        this.tasks.update(list => list.map(t => t.id === res.data.id ? res.data : t));
+      },
+      error: (err) => {
+        console.error('Error updating task assignee', err);
+        this.notificationService.error(err.error?.message || 'Error al actualizar responsable');
       }
     });
   }

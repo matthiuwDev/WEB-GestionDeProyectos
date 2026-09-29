@@ -24,11 +24,24 @@
                 </mat-card-title>
                 <mat-card-subtitle>Historia de Usuario #{{ currentStory.id }}</mat-card-subtitle>
               </div>
-              @if (isStoryEditable()) {
-                <button mat-icon-button (click)="enableEdit()" aria-label="Editar" color="primary">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              }
+              
+              <div class="header-tools">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="story-assignee-select">
+                  <mat-label>Responsable de la HU</mat-label>
+                  <mat-select [value]="currentStory.assigneeId" (selectionChange)="updateStoryAssignee($event.value)" [disabled]="!isOwner()">
+                    <mat-option [value]="null">Sin asignar</mat-option>
+                    @for (member of projectMembers(); track member.id) {
+                      <mat-option [value]="member.id">{{ member.name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                @if (isStoryEditable()) {
+                  <button mat-icon-button (click)="enableEdit()" aria-label="Editar" color="primary">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                }
+              </div>
             } @else {
               <mat-form-field appearance="outline" class="full-width title-input">
                 <mat-label>Título de la Historia</mat-label>
@@ -87,6 +100,16 @@
                 </div>
                 
                 <div class="task-actions">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="task-assignee-select">
+                    <mat-label>Responsable</mat-label>
+                    <mat-select [value]="task.assigneeId" [disabled]="!areTasksEditable()" (selectionChange)="updateTaskAssignee(task, $event.value)">
+                      <mat-option [value]="null">Sin asignar</mat-option>
+                      @for (member of projectMembers(); track member.id) {
+                        <mat-option [value]="member.id">{{ member.name }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
                   <mat-form-field appearance="outline" subscriptSizing="dynamic" class="status-select">
                     <mat-select [value]="task.status" [disabled]="!areTasksEditable()" (selectionChange)="updateTaskStatus(task, $event.value)">
                       <mat-option value="TODO">Por hacer</mat-option>

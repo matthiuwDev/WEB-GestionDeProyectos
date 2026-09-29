@@ -14,6 +14,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
 import { Sprint } from '../../models/sprint.interface';
 import { UserStory } from '../../../user-stories/models/user-story.interface';
 import { Task } from '../../../tasks/models/task.interface';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-active-sprint-page',
@@ -25,7 +26,8 @@ import { Task } from '../../../tasks/models/task.interface';
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule,
-    DatePipe
+    DatePipe,
+    InitialsPipe
   ],
   templateUrl: './active-sprint-page.component.html',
   styleUrl: './active-sprint-page.component.scss',

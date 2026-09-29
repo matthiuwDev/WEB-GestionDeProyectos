@@ -43,8 +43,15 @@
       @for (story of userStories(); track story.id) {
         <mat-card class="story-card">
           <mat-card-header>
-            <mat-card-title>{{ story.name }}</mat-card-title>
-            <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
+            <div class="title-container">
+              <mat-card-title>{{ story.name }}</mat-card-title>
+              <mat-card-subtitle>ID: #{{ story.id }}</mat-card-subtitle>
+            </div>
+            @if (story.assignee) {
+              <div class="assignee-badge" [title]="'Responsable: ' + story.assignee.name">
+                {{ story.assignee.name | initials }}
+              </div>
+            }
           </mat-card-header>
           <mat-card-content>
             <p class="story-description" [class.empty]="!story.description">

@@ -5,7 +5,8 @@ import {
     UserInvitationResponse,
     UserListResponse,
     ValidationResponse,
-    AcceptInvitationResponse
+    AcceptInvitationResponse,
+    ProjectMembersResponse
 } from '../models/user.interface';
 import { Observable } from 'rxjs';
 import { ProjectResponse } from '../../projects/models/project.interface';
@@ -19,6 +20,10 @@ export class UserService {
 
   getProjectUsers(projectId: number): Observable<UserListResponse> {
     return this.http.get<UserListResponse>(`${this.apiUrl}/${projectId}/users`);
+  }
+
+  getUsersByProject(projectId: number): Observable<ProjectMembersResponse> {
+    return this.http.get<ProjectMembersResponse>(`${environment.apiUrl}/users/${projectId}`);
   }
 
   inviteUser(projectId: number, email: string): Observable<UserInvitationResponse> {

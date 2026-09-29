@@ -15,6 +15,7 @@ import { UserStoryCreateDialogComponent } from '../../components/user-story-crea
 import { ProjectContextService } from '../../../../core/services/project-context.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-backlog-page',
@@ -28,6 +29,7 @@ import { ConfirmDialogComponent } from '../../../../shared/ui/confirm-dialog/con
     MatProgressSpinnerModule,
     MatCardModule,
     MatDividerModule,
+    InitialsPipe
   ],
   templateUrl: './backlog-page.component.html',
   styleUrl: './backlog-page.component.scss',

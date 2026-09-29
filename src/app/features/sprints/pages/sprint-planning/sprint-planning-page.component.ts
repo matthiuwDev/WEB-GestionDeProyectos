@@ -14,6 +14,7 @@ import { SprintsService } from '../../services/sprints.service';
 import { Sprint } from '../../models/sprint.interface';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { ProjectContextService } from '../../../../core/services/project-context.service';
+import { InitialsPipe } from '../../../../shared/pipes/initials.pipe';
 
 @Component({
   selector: 'app-sprint-planning-page',
@@ -25,7 +26,8 @@ import { ProjectContextService } from '../../../../core/services/project-context
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    InitialsPipe
   ],
   templateUrl: './sprint-planning-page.component.html',
   styleUrl: './sprint-planning-page.component.scss',

@@ -46,6 +46,12 @@
               @if (story.description) {
                 <p>{{ story.description }}</p>
               }
+              @if (story.assignee) {
+                <div class="story-assignee" [title]="'Responsable: ' + story.assignee.name">
+                  <div class="assignee-badge">{{ story.assignee.name | initials }}</div>
+                  <span class="assignee-name">{{ story.assignee.name }}</span>
+                </div>
+              }
             </div>
 
             <!-- Tasks Columns (Restricted to this row) -->
@@ -57,7 +63,12 @@
                    (cdkDropListDropped)="drop($event, i, 'TODO')">
                 @for (task of getTasksByStatus(story, 'TODO'); track task.id) {
                   <mat-card class="task-card grab-card" cdkDrag [cdkDragData]="task">
-                    <mat-card-content>{{ task.name }}</mat-card-content>
+                    <mat-card-content class="task-content-inner">
+                      <span class="task-name">{{ task.name }}</span>
+                      @if (task.assignee) {
+                        <div class="assignee-badge small-badge" [title]="'Responsable: ' + task.assignee.name">{{ task.assignee.name | initials }}</div>
+                      }
+                    </mat-card-content>
                   </mat-card>
                 }
               </div>
@@ -68,7 +79,12 @@
                    (cdkDropListDropped)="drop($event, i, 'IN_PROGRESS')">
                 @for (task of getTasksByStatus(story, 'IN_PROGRESS'); track task.id) {
                   <mat-card class="task-card grab-card" cdkDrag [cdkDragData]="task">
-                    <mat-card-content>{{ task.name }}</mat-card-content>
+                    <mat-card-content class="task-content-inner">
+                      <span class="task-name">{{ task.name }}</span>
+                      @if (task.assignee) {
+                        <div class="assignee-badge small-badge" [title]="'Responsable: ' + task.assignee.name">{{ task.assignee.name | initials }}</div>
+                      }
+                    </mat-card-content>
                   </mat-card>
                 }
               </div>
@@ -79,7 +95,12 @@
                    (cdkDropListDropped)="drop($event, i, 'DONE')">
                 @for (task of getTasksByStatus(story, 'DONE'); track task.id) {
                   <mat-card class="task-card grab-card done-task" cdkDrag [cdkDragData]="task">
-                    <mat-card-content>{{ task.name }}</mat-card-content>
+                    <mat-card-content class="task-content-inner">
+                      <span class="task-name">{{ task.name }}</span>
+                      @if (task.assignee) {
+                        <div class="assignee-badge small-badge" [title]="'Responsable: ' + task.assignee.name">{{ task.assignee.name | initials }}</div>
+                      }
+                    </mat-card-content>
                   </mat-card>
                 }
               </div>
