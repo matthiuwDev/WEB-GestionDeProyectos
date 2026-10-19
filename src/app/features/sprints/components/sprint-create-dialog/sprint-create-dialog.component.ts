@@ -7,11 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { SprintsService } from '../../services/sprints.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CreateSprintDto } from '../../models/sprint.interface';
@@ -28,7 +28,6 @@ import { CreateSprintDto } from '../../models/sprint.interface';
     MatButtonModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatProgressSpinnerModule,
     MatIconModule,
     MatTooltipModule
@@ -36,6 +35,10 @@ import { CreateSprintDto } from '../../models/sprint.interface';
   templateUrl: './sprint-create-dialog.component.html',
   styleUrl: './sprint-create-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+  ]
 })
 export class SprintCreateDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
