@@ -7,7 +7,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ProjectContextService } from '../../../../core/services/project-context.service';
 import { UserService } from '../../services/user.service';

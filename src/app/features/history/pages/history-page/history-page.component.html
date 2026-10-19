@@ -1,0 +1,125 @@
+<div class="page-header">
+  <div class="title-container">
+    <h1>Historial de Actividad</h1>
+    @if (!isLoading() && totalLoaded() > 0) {
+      <p class="subtitle">{{ totalLoaded() }} evento{{ totalLoaded() === 1 ? '' : 's' }} encontrados</p>
+    }
+  </div>
+
+  <button mat-flat-button class="minimal-primary-btn" (click)="loadHistory()" [disabled]="isLoading()">
+    <mat-icon>refresh</mat-icon>
+    Actualizar
+  </button>
+</div>
+
+<div class="content-container">
+  <div class="filters-row">
+    <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+      <mat-label>Entidad</mat-label>
+      <mat-select [value]="filterEntity()" (selectionChange)="onEntityChange($event.value)">
+        <mat-option value="">Todas las entidades</mat-option>
+        <mat-option value="Task">Tareas</mat-option>
+        <mat-option value="UserStory">Historias de Usuario</mat-option>
+        <mat-option value="Sprint">Sprints</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+      <mat-label>Acción</mat-label>
+      <mat-select [value]="filterAction()" (selectionChange)="onActionChange($event.value)">
+        <mat-option value="">Todas las acciones</mat-option>
+        <mat-option value="CREATE">Creación</mat-option>
+        <mat-option value="UPDATE">Actualización</mat-option>
+        <mat-option value="DELETE">Eliminación</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando historial...</p>
+    </div>
+
+  } @else if (error()) {
+    <div class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error() }}</p>
+      <button mat-stroked-button (click)="loadHistory()">Reintentar</button>
+    </div>
+
+  } @else if (activities().length === 0) {
+    <div class="empty-state">
+      <mat-icon>history_toggle_off</mat-icon>
+      <h3>Sin registros de actividad</h3>
+      <p>No se encontraron eventos con los filtros seleccionados.</p>
+    </div>
+
+  } @else {
+    <mat-card class="table-card">
+      <table mat-table [dataSource]="activities()" class="history-table">
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>Usuario</th>
+          <td mat-cell *matCellDef="let a">
+            <div class="user-info">
+              <div class="avatar">{{ a.userName ? a.userName.charAt(0).toUpperCase() : 'U' }}</div>
+              <span>{{ a.userName || 'Desconocido' }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Acción</th>
+          <td mat-cell *matCellDef="let a">
+            <mat-chip-set>
+              <mat-chip [ngClass]="getActionChipClass(a.action)">
+                {{ getActionLabel(a.action) }}
+              </mat-chip>
+            </mat-chip-set>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="entity">
+          <th mat-header-cell *matHeaderCellDef>Entidad</th>
+          <td mat-cell *matCellDef="let a">
+            <div class="entity-info">
+              <mat-icon class="entity-icon">{{ getEntityIcon(a.entity) }}</mat-icon>
+              <span>{{ getEntityLabel(a.entity) }}</span>
+              <span class="entity-id">#{{ a.entityId }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Detalle</th>
+          <td mat-cell *matCellDef="let a">
+            @if (a.action === 'CREATE' && a.snapshot?.['name']) {
+              <span class="detail-text">"{{ a.snapshot['name'] }}"</span>
+            } @else if (a.action === 'UPDATE' && a.changes) {
+              <span class="changes-text" [matTooltip]="formatChanges(a.changes)">
+                <mat-icon class="inline-icon">edit_note</mat-icon>
+                {{ formatChanges(a.changes) }}
+              </span>
+            } @else if (a.action === 'DELETE') {
+              <span class="deleted-text">Elemento eliminado</span>
+            } @else {
+              <span class="muted-text">—</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef class="date-col-header">Fecha</th>
+          <td mat-cell *matCellDef="let a" class="date-col">
+            {{ a.createdAt | date:'d MMM y, h:mm a' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </mat-card>
+  }
+
+</div>

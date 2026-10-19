@@ -55,6 +55,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/users/pages/project-users-page/project-users-page.component')
       },
       {
+        path: 'history',
+        loadComponent: () =>
+        import('./features/history/pages/history-page/history-page.component').then(m => m.HistoryPageComponent)
+      },
+      {
         path: '',
         redirectTo: 'backlog',
         pathMatch: 'full'
