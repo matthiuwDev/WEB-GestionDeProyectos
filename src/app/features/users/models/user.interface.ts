@@ -1,7 +1,10 @@
 export interface ProjectMember {
-  id: number;
-  name: string;
-  email: string;
+  action: string;
+  entity: string;
+  entityId: number;
+  projectId: number;
+  userId: number;
+  userName: string;
 }
 
 export interface ProjectMembersResponse {
